@@ -9,7 +9,7 @@ define(function() {
     window.requestAnimFrame = (function(callback) {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
             function(callback) {
-                window.setTimeout(callback, 500);
+                window.setTimeout(callback, 1000 / 60);
             };
     })();
 
@@ -30,7 +30,9 @@ define(function() {
                 currentRadius: radius,
                 opacity: opacity,
                 startNoise: sound.noise,
-                currentNoise: sound.noise
+                currentNoise: sound.noise,
+                iterations: 1,
+                startTime: (new Date()).getTime()
             };
             animatingSounds.push(animatingSound);
 
@@ -52,36 +54,49 @@ define(function() {
     }
 
     function animate() {
+        var expiredIndices = [];
+
         for (var i = 0; i < animatingSounds.length; i++) {
             var sound = animatingSounds[i];
 
             // pixels / second
-            var newRadius = sound.currentRadius + 10; //(linearSpeed * time / 100);
-            var newNoise = sound.currentNoise - 1; //(linearSpeed * time / 1000);
+            var time = (new Date()).getTime() - sound.startTime;
+            var newRadius = 5 * time / 1000;
+            var newNoise = time / 1000;
 
-            if (newNoise >= 0) {
-                sound.currentRadius = newRadius;
-                sound.currentNoise = newNoise;
-            } else {
+            if (sound.currentNoise - newNoise >= 0) {
+                sound.currentRadius += newRadius;
+                sound.currentNoise -= newNoise;
+            } else if (sound.iterations < 3) {
                 sound.currentRadius = sound.startRadius;
                 sound.currentNoise = sound.startNoise;
+                sound.iterations++;
+                sound.startTime = (new Date()).getTime();
+            } else {
+                expiredIndices.push(i);
             }
         }
 
         // clear
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        for (var i = 0; i < animatingSounds.length; i++) {
-            sound = animatingSounds[i];
-            if (sound.currentNoise > 0) {
-                drawSound(sound);
-            }
+        // Remove animating sounds that have signaled enough times
+        for (var i = 0; i < expiredIndices.length; i++) {
+            animatingSounds.splice(expiredIndices[i], 1);
         }
 
-        // request new frame
-        requestAnimFrame(function() {
-            animate();
-        });
+        // Draw the sound with its new properties
+        for (var i = 0; i < animatingSounds.length; i++) {
+            sound = animatingSounds[i];
+            drawSound(sound);
+        }
+
+        // If there's still something to animate
+        if (animatingSounds.length > 0) {
+            requestAnimFrame(function() {
+                animate();
+            });
+        }
     }
 
     return {

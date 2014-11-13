@@ -74,8 +74,8 @@ define(function() {
 
                 for (i = 0; i < players.length; i++) {
                     var player = players[i];
-                    var x = player.x * TILE_SIZE - PLAYER_SIZE/2;
-                    var y = player.y * TILE_SIZE - PLAYER_SIZE/2;
+                    var x = player.x * TILE_SIZE;
+                    var y = player.y * TILE_SIZE;
 
                     drawPlayer(player, x, y);
                     drawName(player, x, y);
