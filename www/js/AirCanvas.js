@@ -13,7 +13,7 @@ define(function() {
         function drawItems(items) {
             console.log("Drawing items...");
 
-            for (i = 0; i < items.length; i++) {
+            for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 var width = textureMap[item.type].width;
                 var height = textureMap[item.type].height;
@@ -25,12 +25,8 @@ define(function() {
             }
         }
 
-        function drawSounds(sounds) {
-
-        }
-
         function drawBullets(bullets) {
-
+            console.log("Drawing bullets...");
         }
 
         return {
@@ -39,7 +35,7 @@ define(function() {
                     'box1.png'
                 ];
 
-                for (i = 0; i < itemTypes.length; i++) {
+                for (var i = 0; i < itemTypes.length; i++) {
                     var img = new Image();
                     img.src = "gfx/items/"+ itemTypes[i];
                     textureMap[itemTypes[i]] = img;
@@ -53,7 +49,6 @@ define(function() {
             },
             draw: function(items, sounds, bullets) {
                 drawItems(items);
-                drawSounds(sounds);
                 drawBullets(bullets);
             }
         }

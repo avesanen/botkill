@@ -12,6 +12,7 @@ define(function() {
         var textureMap = {};
 
         return {
+            ready: false,
             init: function(callback) {
                 var tileTypes = [
                     'grass',
@@ -37,6 +38,7 @@ define(function() {
                     var tile = tiles[i];
                     ctx.drawImage(textureMap[tile.type], tile.x*TILE_SIZE, tile.y*TILE_SIZE);
                 }
+                ready = true;
             }
         }
     }
