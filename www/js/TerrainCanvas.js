@@ -8,24 +8,29 @@
 define(function() {
         var TILE_SIZE = 144;
 
-        var tileTypes = [
-            'grass',
-            'wall',
-            'box1'
-        ];
-
-        var textureMap = {};
-        for (i = 0; i < tileTypes.length; i++) {
-            var img = new Image();
-            img.src = "gfx/tiles/"+ tileTypes[i] + ".png";
-            textureMap[i] = img;
-        }
-
         var ctx = document.getElementById("terraincanvas").getContext("2d");
-        ctx.canvas.width  = window.innerWidth;
-        ctx.canvas.height = window.innerHeight;
+        var textureMap = {};
 
         return {
+            init: function(callback) {
+                var tileTypes = [
+                    'grass',
+                    'wall',
+                    'box1'
+                ];
+
+                for (i = 0; i < tileTypes.length; i++) {
+                    var img = new Image();
+                    img.src = "gfx/tiles/"+ tileTypes[i] + ".png";
+                    textureMap[i] = img;
+                    if (i == tileTypes.length-1) {
+                        img.onload = callback;
+                    }
+                }
+
+                ctx.canvas.width  = window.innerWidth;
+                ctx.canvas.height = window.innerHeight;
+            },
             draw: function(tiles) {
                 console.log("Drawing tiles...");
 

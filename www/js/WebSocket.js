@@ -13,10 +13,10 @@ define(["lib/socket.io"], function(socketio) {
         connect: function(listener) {
             console.log("Connecting...");
 
-            /*var io = socketio();
+            var io = socketio();
             io.on('msg', function(msg) {
                 listener.handle(msg);
-            });*/
+            });
         }
     }
 });

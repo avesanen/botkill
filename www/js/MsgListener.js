@@ -7,6 +7,13 @@
  */
 define(['./TerrainCanvas', './PlayerCanvas'], function(terrain, players) {
         return {
+            init: function(callback) {
+                terrain.init(function() {
+                    players.init(function() {
+                        callback();
+                    });
+                });
+            },
             handle: function(msg) {
                 var data = JSON.parse(msg);
                 terrain.draw(data.tiles);
