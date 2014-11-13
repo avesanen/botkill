@@ -15,8 +15,7 @@ define(function() {
             init: function(callback) {
                 var tileTypes = [
                     'grass',
-                    'wall',
-                    'box1'
+                    'wall'
                 ];
 
                 for (i = 0; i < tileTypes.length; i++) {

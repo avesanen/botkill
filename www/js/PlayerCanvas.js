@@ -23,6 +23,10 @@ define(function() {
             var v1 = {x:0, y:-1};
             var angle = findAngle(v1, player.velocity); // TODO: Should use looking direction instead of velocity
             ctx.save();
+            ctx.shadowColor = '#101010';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 15;
+            ctx.shadowOffsetY = 15;
             ctx.translate(x, y);
             ctx.rotate(angle);
             ctx.drawImage(img, -PLAYER_SIZE/2, -PLAYER_SIZE/2);

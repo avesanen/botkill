@@ -5,12 +5,14 @@
  * Time: 1:18
  * To change this template use File | Settings | File Templates.
  */
-define(['./TerrainCanvas', './PlayerCanvas'], function(terrain, players) {
+define(['./TerrainCanvas', './PlayerCanvas', './AirCanvas'], function(terrain, players, air) {
         return {
             init: function(callback) {
                 terrain.init(function() {
                     players.init(function() {
-                        callback();
+                        air.init(function() {
+                            callback();
+                        });
                     });
                 });
             },
@@ -18,6 +20,7 @@ define(['./TerrainCanvas', './PlayerCanvas'], function(terrain, players) {
                 var data = JSON.parse(msg);
                 terrain.draw(data.tiles);
                 players.draw(data.players);
+                air.draw(data.items, data.sounds, data.bullets);
             }
         }
     }
