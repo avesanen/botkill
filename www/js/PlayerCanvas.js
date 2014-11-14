@@ -19,6 +19,13 @@ define(function() {
         }
 
         function drawPlayer(player, x, y) {
+			// Ring of hearing
+			ctx.beginPath();
+			ctx.arc(x, y, player.hearing*TILE_SIZE/20, 0, 2 * Math.PI, false);
+			ctx.lineWidth = 1;
+			ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+			ctx.fill();
+			
             // Calculate the angle between vectors 0,-1 and player velocity
             var v1 = {x:0, y:-1};
             var angle = findAngle(v1, player.velocity); // TODO: Should use looking direction instead of velocity
