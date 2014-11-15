@@ -5,8 +5,8 @@
  * Time: 1:13
  * To change this template use File | Settings | File Templates.
  */
-define(function() {
-        var TILE_SIZE = 144;
+define(function(require) {
+        var TILE_SIZE = require("config").TILE_SIZE;
 
         var ctx = document.getElementById("terraincanvas").getContext("2d");
         var textureMap = {};
@@ -36,7 +36,7 @@ define(function() {
 
                 for (i = 0; i < tiles.length; i++) {
                     var tile = tiles[i];
-                    ctx.drawImage(textureMap[tile.type], tile.x*TILE_SIZE, tile.y*TILE_SIZE);
+                    ctx.drawImage(textureMap[tile.type], tile.x*TILE_SIZE, tile.y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
                 ready = true;
             }

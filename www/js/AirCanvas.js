@@ -5,8 +5,8 @@
  * Time: 1:13
  * To change this template use File | Settings | File Templates.
  */
-define(function() {
-        var TILE_SIZE = 144;
+define(function(require) {
+        var TILE_SIZE = require("config").TILE_SIZE;
         var ctx = document.getElementById("aircanvas").getContext("2d");
         var textureMap = {};
 
@@ -15,13 +15,13 @@ define(function() {
 
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
-                var width = textureMap[item.type].width;
-                var height = textureMap[item.type].height;
+                var width = TILE_SIZE * item.size;
+                var height = TILE_SIZE * item.size;
                 ctx.shadowColor = '#101010';
                 ctx.shadowBlur = 10;
                 ctx.shadowOffsetX = 10;
                 ctx.shadowOffsetY = 10;
-                ctx.drawImage(textureMap[item.type], item.x*TILE_SIZE-width/2, item.y*TILE_SIZE-height/2);
+                ctx.drawImage(textureMap[item.type], item.x*TILE_SIZE-width/2, item.y*TILE_SIZE-height/2, width, height);
             }
         }
 

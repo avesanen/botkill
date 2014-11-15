@@ -5,9 +5,9 @@
  * Time: 1:13
  * To change this template use File | Settings | File Templates.
  */
-define(function() {
-        var TILE_SIZE = 144;
-        var PLAYER_SIZE = 50;
+define(function(require) {
+        var TILE_SIZE = require("config").TILE_SIZE;
+        var PLAYER_SIZE = TILE_SIZE/2;
 
         var ctx = document.getElementById("playercanvas").getContext("2d");
         var img = new Image();
@@ -19,29 +19,30 @@ define(function() {
         }
 
         function drawPlayer(player, x, y) {
-			// Ring of hearing
-			ctx.beginPath();
-			ctx.arc(x, y, player.hearing*TILE_SIZE/20, 0, 2 * Math.PI, false);
-			ctx.lineWidth = 1;
-			ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
-			ctx.fill();
-			
             // Calculate the angle between vectors 0,-1 and player velocity
             var v1 = {x:0, y:-1};
             var angle = findAngle(v1, player.velocity); // TODO: Should use looking direction instead of velocity
             ctx.save();
             ctx.shadowColor = '#101010';
             ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 15;
-            ctx.shadowOffsetY = 15;
+            ctx.shadowOffsetX = PLAYER_SIZE/5;
+            ctx.shadowOffsetY = PLAYER_SIZE/5;
             ctx.translate(x, y);
             ctx.rotate(angle);
-            ctx.drawImage(img, -PLAYER_SIZE/2, -PLAYER_SIZE/2);
+            ctx.drawImage(img, -PLAYER_SIZE/2, -PLAYER_SIZE/2, PLAYER_SIZE, PLAYER_SIZE);
             ctx.restore();
         }
 
+        function drawRingOfHearing(player, x, y) {
+            ctx.beginPath();
+            ctx.arc(x, y, player.hearing*TILE_SIZE/20, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 1;
+            ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+            ctx.fill();
+        }
+
         function drawName(player, x, y) {
-            ctx.font = 'bold 20px Courier';
+            ctx.font = 'bold 15px Courier';
             ctx.fillStyle = 'black';
             ctx.fillText(player.name, x - ctx.measureText(player.name).width/2, y - PLAYER_SIZE/2 - 20);
         }
@@ -84,6 +85,7 @@ define(function() {
                     var x = player.x * TILE_SIZE;
                     var y = player.y * TILE_SIZE;
 
+                    drawRingOfHearing(player, x, y);
                     drawPlayer(player, x, y);
                     drawName(player, x, y);
                     drawHealthBar(player, x, y);
