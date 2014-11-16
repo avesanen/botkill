@@ -11,6 +11,7 @@ define(function(require) {
         var DARKNESS = 0.6;
         var FOV_GRADIENT_AMOUNT = 5;
         var GRADIENT_PERCENT_OF_FOV = 0.9;
+        var colors = ['0,0,0', '255,0,0', '0,255,0', '0,0,255'];
 
         var ctx = document.getElementById("fovcanvas").getContext("2d");
         ctx.canvas.width  = window.innerWidth;
@@ -28,6 +29,22 @@ define(function(require) {
         }
 
         function drawPlayerFov(player, x, y) {
+//            var FOV_RAD = (FOV + player.sight/2)*Math.PI/180;
+//            var sight = player.sight/10*TILE_SIZE;
+//            var v1 = {x:1, y:0};
+//            var angle = findAngle(v1, player.velocity); // TODO: Should use looking direction instead of velocity
+//
+//            ctx.save();
+//            ctx.translate(x, y);
+//            ctx.rotate(angle);
+//            ctx.beginPath();
+//            ctx.moveTo(0, 0);
+//            ctx.arc(0, 0, sight, -FOV_RAD/2, FOV_RAD/2, false);
+//            ctx.fillStyle = "rgba("+colors[player.team]+", 0.3)";
+//            ctx.closePath();
+//            ctx.fill();
+//            ctx.restore();
+
             // Increase FOV by 50% of the player's sight. E.g. sight of 90 would increase FOV by 45 degrees.
             var FOV_RAD = (FOV + player.sight/2)*Math.PI/180;
 
