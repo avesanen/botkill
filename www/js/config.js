@@ -7,6 +7,6 @@
  */
 define(function() {
     return {
-        TILE_SIZE : 50
+        TILE_SIZE : 76
     }
 });

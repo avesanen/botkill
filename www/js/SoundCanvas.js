@@ -1,9 +1,10 @@
 
 define(function(require) {
     var TILE_SIZE = require("config").TILE_SIZE;
-    var TIMES_TO_SIGNAL = 3;
-    var SOUND_SPEED = 3; // units per second
+    var TIMES_TO_SIGNAL = 1;
+    var SOUND_ANIM_TIME = 2; // how long sound animation lasts
     var SOUND_START_LINE_WIDTH = 1; // 1 unit
+    var START_OPACITY = 0.4;
 
     var ctx = document.getElementById("soundcanvas").getContext("2d");
     ctx.canvas.width  = window.innerWidth;
@@ -24,7 +25,6 @@ define(function(require) {
             var sound = sounds[i];
             var x = sound.x * TILE_SIZE;
             var y = sound.y * TILE_SIZE;
-            var opacity = 0.18;
 
             var animatingSound = {
                 x: x,
@@ -32,10 +32,10 @@ define(function(require) {
                 startRadius: 0,
                 currentRadius: 0,
                 lineWidth: SOUND_START_LINE_WIDTH,
-                opacity: opacity,
+                opacity: START_OPACITY,
                 noise: sound.noise,
                 iterations: 1,
-                startTime: (new Date()).getTime()
+                lastAnimate: 0
             };
             animatingSounds.push(animatingSound);
 
@@ -62,24 +62,30 @@ define(function(require) {
         for (var i = 0; i < animatingSounds.length; i++) {
             var sound = animatingSounds[i];
 
-            // pixels / second
-            var deltatime = (new Date()).getTime() - sound.startTime;
-            sound.startTime = (new Date()).getTime();
-            var radiusToIncreasePerMilli = SOUND_SPEED / 1000;
-            // So that line width gets to zero when radius (/2) reaches 1/10 units of sound noise's in one millisecond (/1000)
-            var secondsToReachMaxDiameter = sound.noise / 10 / SOUND_SPEED;
-            var secondsToReachMaxRadius = secondsToReachMaxDiameter / 2;
-            var millisToReachMaxRadius = secondsToReachMaxRadius * 1000;
+            // If sound have not yet gone through a single animation frame
+            if (sound.lastAnimate == 0) {
+                sound.lastAnimate = (new Date()).getTime();
+            }
+
+            var deltatime = (new Date()).getTime() - sound.lastAnimate;
+            sound.lastAnimate = (new Date()).getTime();
+            var radiusToIncreasePerMilli = sound.noise/10 / 2 / SOUND_ANIM_TIME / 1000;
+            var millisToReachMaxRadius = SOUND_ANIM_TIME * 1000;
+            // -0.1 because I don't want the sound arc disappear totally.
+            var opacityToDecreasePerMilli = (START_OPACITY - 0.1) / SOUND_ANIM_TIME / 1000;
 
             var newRadius = deltatime * radiusToIncreasePerMilli;
             var newLineWidth = deltatime * SOUND_START_LINE_WIDTH / millisToReachMaxRadius;
+            var newOpacity = deltatime * opacityToDecreasePerMilli;
 
             if (sound.lineWidth - newLineWidth >= 0) {
                 sound.currentRadius += newRadius;
                 sound.lineWidth -= newLineWidth;
+                sound.opacity -= newOpacity;
             } else if (sound.iterations < TIMES_TO_SIGNAL) {
                 sound.currentRadius = sound.startRadius;
                 sound.lineWidth = 1;
+                sound.opacity = START_OPACITY;
                 sound.iterations++;
             } else {
                 expiredIndices.push(i);
