@@ -37,7 +37,7 @@ define(function(require) {
             ctx.beginPath();
             ctx.arc(x, y, player.hearing*TILE_SIZE/20, 0, 2 * Math.PI, false);
             ctx.lineWidth = 1;
-            ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+            ctx.fillStyle = "rgba(240, 255, 90, 0.08)";
             ctx.fill();
         }
 

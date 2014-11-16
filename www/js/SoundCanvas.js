@@ -24,7 +24,7 @@ define(function(require) {
             var sound = sounds[i];
             var x = sound.x * TILE_SIZE;
             var y = sound.y * TILE_SIZE;
-            var opacity = 0.1;
+            var opacity = 0.18;
 
             var animatingSound = {
                 x: x,
@@ -52,7 +52,7 @@ define(function(require) {
         ctx.beginPath();
         ctx.arc(sound.x, sound.y, sound.currentRadius*TILE_SIZE, 0, 2 * Math.PI, false);
         ctx.lineWidth = sound.lineWidth * TILE_SIZE;
-        ctx.strokeStyle = "rgba(255, 255, 255, "+sound.opacity+")";
+        ctx.strokeStyle = "rgba(255, 0, 0, "+sound.opacity+")";
         ctx.stroke();
     }
 
