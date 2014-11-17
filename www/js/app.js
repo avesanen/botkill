@@ -1,7 +1,10 @@
 
 
-requirejs(['./WebSocket', './MsgListener'],
-    function(socket, listener, mapCanvas) {
+requirejs(['./WebSocket', './MsgListener', './HudCanvas'],
+    function(socket, listener, hud) {
+		hud.init(function() {
+			hud.draw();
+		});
         /*
          listener.init(function() {
             socket.connect(listener); // TODO: uncomment when server available
