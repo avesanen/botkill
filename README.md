@@ -16,6 +16,32 @@ AI programming game in spirit of old top-down kill'em'all games.
 * [Join message](#join-message)
 * [Action message](#action-message)
 
+## Communication between AI and Server
+
+1. AI sends a [join](#join-message) message to the server
+3. Server [validates](#join-message-validatin) the join message
+2. If player is valid, server checks if gameID was specified
+    1. If gameId found (and it's awaiting players), select the game and append player into that game
+    2. If gameId not found, create a new game and append player into that game
+3. Send the unique visualization URL for the game, including the gameId needed for joining that game.
+4. Check if the game has enough teams and players (per team) joined. Wait until that.
+5. When all players joined, start the game loop and send the above JSON data for [visualization](#json-for-visualization) and [AI](#json-for-ai)s
+6. Receive [action](#action-message) messages from AIs. Only 1 per tick per player allowed.
+
+## Join message validation
+
+The following points are validated:
+* gameId must exist or null
+* numberOfTeams must be > 1 and < 100 or null
+* playersPerTeam > 0 and < 10 or null
+* player
+    * hp + speed == 100
+    * hearing + sight == 100
+    * team: null OR (> 0 and <= game.numberOfTeams and game.teams[team].size < game.playersPerTeam)
+* player weapon
+    * firingSpeed + damage == 100
+    * carry + noise == 100
+
 ## Server messages
 
 ### JSON for visualization
@@ -152,32 +178,6 @@ AI programming game in spirit of old top-down kill'em'all games.
 }
 
 ```
-
-## Communication between AI and Server
-
-1. AI sends a [join](#join-message) message to the server
-3. Server [validates](#join-message-validatin) the join message
-2. If player is valid, server checks if gameID was specified
-    1. If gameId found (and it's awaiting players), select the game and append player into that game
-    2. If gameId not found, create a new game and append player into that game
-3. Send the unique visualization URL for the game, including the gameId needed for joining that game.
-4. Check if the game has enough teams and players (per team) joined. Wait until that.
-5. When all players joined, start the game loop and send the above JSON data for [visualization](#json-for-visualization) and [AI](#json-for-ai)s
-6. Receive [action](#action-message) messages from AIs. Only 1 per tick per player allowed.
-
-## Join message validation
-
-The following points are validated:
-* gameId must exist or null
-* numberOfTeams must be > 1 and < 100 or null
-* playersPerTeam > 0 and < 10 or null
-* player
-    * hp + speed == 100
-    * hearing + sight == 100
-    * team: null OR (> 0 and <= game.numberOfTeams and game.teams[team].size < game.playersPerTeam)
-* player weapon
-    * firingSpeed + damage == 100
-    * carry + noise == 100
 
 ## AI messages
 
