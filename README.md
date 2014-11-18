@@ -4,12 +4,12 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ## Table of Contents
 
-**[Server messages](#server-messages)**
+**[Communication between AI and Server](#communication-between-ai-and-server)**
+**[Join message validation](#join-message-validation)**
 
+**[Server messages](#server-messages)**
 * [JSON for visualization](#json-for-visualization)
 * [JSON for AI](#json-for-ai)
-* [Communication between AI and Server](#communication-between-ai-and-server)
-* [Join message validation](#join-message-validation)
 
 **[AI messages](#ai-messages)**
 * [Join message](#join-message)
