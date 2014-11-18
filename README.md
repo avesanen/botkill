@@ -13,7 +13,10 @@ AI programming game in spirit of old top-down kill'em'all games.
             "x": float,             // Tile on x-axis
             "y": float,             // Tile on y-axis
             "velocity": vector,     // {x:float,y:float}
-            "hp": int,              // 1-99, counterpart: speed
+            "lookAt": vector,       // {x:float,y:float}
+            "shootAt": vector,      // {x:float,y:float}
+            "currentHp": int,       // 1-99
+            "maxHp": int,           // 1-99, counterpart: speed
             "speed": float,         // 1-99, counterpart: hp
             "sight": float,         // 1-99, counterpart: hearing
             "hearing": float        // 1-99, counterpart: sight
@@ -39,8 +42,8 @@ AI programming game in spirit of old top-down kill'em'all games.
             "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
             "x": int,               // Tile on x-axis
             "y": int,               // Tile on y-axis
-            width: float,           // Relative to tile size
-            height: float           // e.g size 2 == 2*TILE_SIZE pixels
+            "width": float,           // Relative to tile size
+            "height": float           // e.g size 2 == 2*TILE_SIZE pixels
         }
     ],
     "bullets": [
