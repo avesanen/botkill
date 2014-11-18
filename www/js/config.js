@@ -7,6 +7,10 @@
  */
 define(function() {
     return {
-        TILE_SIZE : 76
+        tilesXCount: 21,
+        tilesYCount: 13,
+        getTileSize : function() {
+            return window.innerHeight / (this.tilesYCount + 1); // Tiles on y-axis and +1 for hud controls
+        }
     }
 });

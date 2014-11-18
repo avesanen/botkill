@@ -1,8 +1,10 @@
 
 define(function(require) {
-    var TILE_SIZE = require("config").TILE_SIZE;
+    var hud = require("HudCanvas");
+    var config = require("config");
+    var TILE_SIZE = config.getTileSize();
     var TIMES_TO_SIGNAL = 1;
-    var SOUND_ANIM_TIME = 2; // how long sound animation lasts
+    var SOUND_ANIM_TIME = 1; // how long sound animation lasts in seconds
     var SOUND_START_LINE_WIDTH = 1; // 1 unit
     var START_OPACITY = 0.4;
 
@@ -29,11 +31,11 @@ define(function(require) {
             var animatingSound = {
                 x: x,
                 y: y,
-                startRadius: 0,
-                currentRadius: 0,
-                lineWidth: SOUND_START_LINE_WIDTH,
+                startRadius: sound.noise/10 / 2,
+                currentRadius: sound.noise/10 / 2,
+                lineWidth: 2,
                 opacity: START_OPACITY,
-                noise: sound.noise,
+                noise: 2,
                 iterations: 1,
                 lastAnimate: 0
             };
@@ -51,12 +53,16 @@ define(function(require) {
     function drawSound(sound) {
         ctx.beginPath();
         ctx.arc(sound.x, sound.y, sound.currentRadius*TILE_SIZE, 0, 2 * Math.PI, false);
-        ctx.lineWidth = sound.lineWidth * TILE_SIZE;
+        ctx.lineWidth = sound.lineWidth;
         ctx.strokeStyle = "rgba(255, 0, 0, "+sound.opacity+")";
         ctx.stroke();
     }
 
     function animate() {
+        if (hud.isPaused()) {
+            return;
+        }
+
         var expiredIndices = [];
 
         for (var i = 0; i < animatingSounds.length; i++) {
@@ -78,9 +84,9 @@ define(function(require) {
             var newLineWidth = deltatime * SOUND_START_LINE_WIDTH / millisToReachMaxRadius;
             var newOpacity = deltatime * opacityToDecreasePerMilli;
 
-            if (sound.lineWidth - newLineWidth >= 0) {
-                sound.currentRadius += newRadius;
-                sound.lineWidth -= newLineWidth;
+            if (sound.opacity - newOpacity >= 0) {
+                //sound.currentRadius += newRadius;
+                //sound.lineWidth -= newLineWidth;
                 sound.opacity -= newOpacity;
             } else if (sound.iterations < TIMES_TO_SIGNAL) {
                 sound.currentRadius = sound.startRadius;
@@ -129,11 +135,15 @@ define(function(require) {
                 }
             }
 
-            ctx.canvas.width  = window.innerWidth;
-            ctx.canvas.height = window.innerHeight;
+            this.resize();
         },
         draw: function(sounds) {
             drawSounds(sounds);
+        },
+        resize: function() {
+            TILE_SIZE = config.getTileSize();
+            ctx.canvas.width  = window.innerWidth;
+            ctx.canvas.height = window.innerHeight;
         }
     }
 });
