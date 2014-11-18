@@ -17,16 +17,16 @@ AI programming game in spirit of old top-down kill'em'all games.
             "shootAt": vector,      // {x:float,y:float} only if player just shoot
             "currentHp": int,       // 1-99
             "maxHp": int,           // 1-99, counterpart: speed
-            "speed": float,         // 1-99, counterpart: hp
-            "sight": float,         // 1-99, counterpart: hearing
-            "hearing": float        // 1-99, counterpart: sight
+            "speed": int,           // 1-99, counterpart: hp
+            "sight": int,           // 1-99, counterpart: hearing
+            "hearing": int          // 1-99, counterpart: sight
             "team": int,
             "isHit": boolean        // If player was just hit
             "weapon": {
-                "firingSpeed": float,// 1-99, counterpart: damage
+                "firingSpeed": int, // 1-99, counterpart: damage
                 "damage": int,      // 1-99, counterpart: firingSpeed
-                "carry": float,     // 1-99, counterpart: noise
-                "noise": float,     // 1-99, counterpart: carry
+                "carry": int,       // 1-99, counterpart: noise
+                "noise": int,       // 1-99, counterpart: carry
             }
         }
     ],
@@ -78,16 +78,16 @@ AI programming game in spirit of old top-down kill'em'all games.
         "shootAt": vector,          // {x:float,y:float} only if player just shoot
         "currentHp": int,           // 1-99
         "maxHp": int,               // 1-99, counterpart: speed
-        "speed": float,             // 1-99, counterpart: hp
-        "sight": float,             // 1-99, counterpart: hearing
-        "hearing": float            // 1-99, counterpart: sight
+        "speed": int,               // 1-99, counterpart: hp
+        "sight": int,               // 1-99, counterpart: hearing
+        "hearing": int              // 1-99, counterpart: sight
         "team": int,
         "isHit": boolean            // If player was just hit
         "weapon": {
-            "firingSpeed": float,   // 1-99, counterpart: damage
+            "firingSpeed": int,     // 1-99, counterpart: damage
             "damage": int,          // 1-99, counterpart: firingSpeed
-            "carry": float,         // 1-99, counterpart: noise
-            "noise": float,         // 1-99, counterpart: carry
+            "carry": int,           // 1-99, counterpart: noise
+            "noise": int,           // 1-99, counterpart: carry
         }
     },
     "players": [                    // Players that are in this AI's view area
