@@ -94,7 +94,7 @@ define(function(require) {
             console.log("Debug mode " + !debugMode + "...");
             debugMode = !debugMode;
             drawHud();
-            msgListener.draw(currentFrame); // TODO: remove when server available
+            msgListener.redraw(currentFrame);
         }
         var pause = function() {
             paused = true;

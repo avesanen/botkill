@@ -47,7 +47,8 @@ define(['./TerrainCanvas', './PlayerCanvas', './AirCanvas', './FovCanvas', './So
                 console.log("Draw frame " + frame);
                 var data = messageHistory[frame-1];
                 if (data.tiles != undefined && data.tiles.length > 0) {
-                    terrain.draw(data.tiles);
+					terrain.tiles = data.tiles;
+                    terrain.draw();
                 }
                 players.draw(data.players);
                 air.draw(data.items, data.sounds, data.bullets);
@@ -63,6 +64,11 @@ define(['./TerrainCanvas', './PlayerCanvas', './AirCanvas', './FovCanvas', './So
                     });
                 }
             },
+			redraw: function(frame) {
+				console.log("Redrawing tiles and all...");
+				terrain.draw();
+				this.draw(frame);
+			},
             resize: function() {
                 terrain.resize();
                 players.resize();

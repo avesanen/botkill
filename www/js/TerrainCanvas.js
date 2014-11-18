@@ -13,6 +13,7 @@ define(function(require) {
         var textureMap = {};
 
         return {
+			tiles: [],
             init: function(callback) {
                 var tileTypes = [
                     'grass',
@@ -30,7 +31,7 @@ define(function(require) {
 
                 this.resize();
             },
-            draw: function(tiles) {
+            draw: function() {
                 console.log("Drawing tiles...");
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -38,8 +39,8 @@ define(function(require) {
                 ctx.fillStyle = "black";
                 ctx.fill();
 
-                for (var i = 0; i < tiles.length; i++) {
-                    var tile = tiles[i];
+                for (var i = 0; i < this.tiles.length; i++) {
+                    var tile = this.tiles[i];
                     if (hud.isDebugMode()) {
                         ctx.drawImage(textureMap[tile.type], tile.x*TILE_SIZE, tile.y*TILE_SIZE, TILE_SIZE-1, TILE_SIZE-1);
                     } else {
@@ -51,6 +52,7 @@ define(function(require) {
                 TILE_SIZE = config.getTileSize();
                 ctx.canvas.width  = window.innerWidth;
                 ctx.canvas.height = window.innerHeight;
+				this.draw();
             }
         }
     }
