@@ -14,7 +14,7 @@ AI programming game in spirit of old top-down kill'em'all games.
             "y": float,             // Tile on y-axis
             "velocity": vector,     // {x:float,y:float}
             "lookAt": vector,       // {x:float,y:float}
-            "shootAt": vector,      // {x:float,y:float}
+            "shootAt": vector,      // {x:float,y:float} only if player just shoot
             "currentHp": int,       // 1-99
             "maxHp": int,           // 1-99, counterpart: speed
             "speed": float,         // 1-99, counterpart: hp
@@ -22,7 +22,6 @@ AI programming game in spirit of old top-down kill'em'all games.
             "hearing": float        // 1-99, counterpart: sight
             "team": int,
             "isHit": boolean        // If player was just hit
-            "isShooting": boolean   // If player just shoot
             "weapon": {
                 "firingSpeed": float,// 1-99, counterpart: damage
                 "damage": int,      // 1-99, counterpart: firingSpeed
@@ -76,14 +75,14 @@ AI programming game in spirit of old top-down kill'em'all games.
         "y": float,                 // Tile on y-axis
         "velocity": vector,         // {x:float,y:float}
         "lookAt": vector,           // {x:float,y:float}
-        "shootAt": vector,          // {x:float,y:float}
+        "shootAt": vector,          // {x:float,y:float} only if player just shoot
         "currentHp": int,           // 1-99
         "maxHp": int,               // 1-99, counterpart: speed
         "speed": float,             // 1-99, counterpart: hp
         "sight": float,             // 1-99, counterpart: hearing
         "hearing": float            // 1-99, counterpart: sight
         "team": int,
-        "state": int,               // 0=STAND, 1=RUN, 2=HIT, 3=SHOOT
+        "isHit": boolean            // If player was just hit
         "weapon": {
             "firingSpeed": float,   // 1-99, counterpart: damage
             "damage": int,          // 1-99, counterpart: firingSpeed
@@ -100,7 +99,8 @@ AI programming game in spirit of old top-down kill'em'all games.
             "velocity": vector,     // {x:float,y:float}
             "lookAt": vector,       // {x:float,y:float}
             "shootAt": vector,      // {x:float,y:float}
-            "team": int
+            "team": int,
+            "isDead": boolean       // For AIs to figure out how many enemies left
         }
     ],
     "tiles": [                      // Tiles that are in this AI's view area
