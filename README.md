@@ -138,20 +138,17 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ```
 
-## Game communication between AI and Server
+## Communication between AI and Server
 
-1. AI sends **join** message to the server
-3. Server validates **player** object from the message
+1. AI sends [join](https://github.com/avesanen/botkill#join-message) message to the server
+3. Server validates player object from the join message
 2. If player is valid, server checks if gameID was specified
     1. If gameID found (and it's awaiting players), select the game and append player into that game
     2. If gameID not found, create a new game and append player into that game
 3. Send the unique visualization URL for the game
 4. Check if the game has enough teams and players (per team) joined. Wait until that.
 5. When all players joined, start the game loop and send the above JSON data for visualization and AIs
-6. Receive the following messages from AIs. Only 1 per tick.
-    * Move
-    * Shoot
-    * Look
+6. Receive [action](https://github.com/avesanen/botkill#action-message) messages from AIs. Only 1 per tick per player.
 
 ## AI messages
 
