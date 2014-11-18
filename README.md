@@ -21,7 +21,8 @@ AI programming game in spirit of old top-down kill'em'all games.
             "sight": float,         // 1-99, counterpart: hearing
             "hearing": float        // 1-99, counterpart: sight
             "team": int,
-            "state": int,           // 0=STAND, 1=RUN, 2=HIT, 3=SHOOT
+            "isHit": boolean        // If player was just hit
+            "isShooting": boolean   // If player just shoot
             "weapon": {
                 "firingSpeed": float,// 1-99, counterpart: damage
                 "damage": int,      // 1-99, counterpart: firingSpeed
