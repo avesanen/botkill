@@ -140,15 +140,15 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ## Communication between AI and Server
 
-1. AI sends [join](https://github.com/avesanen/botkill#join-message) message to the server
+1. AI sends a [join](https://github.com/avesanen/botkill#join-message) message to the server
 3. Server validates player object from the join message
 2. If player is valid, server checks if gameID was specified
-    1. If gameID found (and it's awaiting players), select the game and append player into that game
-    2. If gameID not found, create a new game and append player into that game
-3. Send the unique visualization URL for the game
+    1. If gameId found (and it's awaiting players), select the game and append player into that game
+    2. If gameId not found, create a new game and append player into that game
+3. Send the unique visualization URL for the game, including the gameId needed for joining that game.
 4. Check if the game has enough teams and players (per team) joined. Wait until that.
-5. When all players joined, start the game loop and send the above JSON data for visualization and AIs
-6. Receive [action](https://github.com/avesanen/botkill#action-message) messages from AIs. Only 1 per tick per player.
+5. When all players joined, start the game loop and send the above JSON data for [visualization](https://github.com/avesanen/botkill#json-for-visualization) and [AI](https://github.com/avesanen/botkill#json-for-ai)s
+6. Receive [action](https://github.com/avesanen/botkill#action-message) messages from AIs. Only 1 per tick per player allowed.
 
 ## AI messages
 
@@ -156,8 +156,9 @@ AI programming game in spirit of old top-down kill'em'all games.
 ```javascript
 {
     "gameId": string,               // Only if player wants to join a game
-    "numberOfTeams": int            // Only if player wants to create a game
-    "playersPerTeam": int           // Only if player wants to create a game
+    "numberOfTeams": int,           // Only if player wants to create a game
+    "playersPerTeam": int,          // Only if player wants to create a game
+    "team": int,                    // Omit if server can decide
     "player": {
         "name": string,
         "hp": int,                  // 1-99, counterpart: speed
