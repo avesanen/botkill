@@ -150,22 +150,36 @@ AI programming game in spirit of old top-down kill'em'all games.
 5. When all players joined, start the game loop and send the above JSON data for [visualization](https://github.com/avesanen/botkill#json-for-visualization) and [AI](https://github.com/avesanen/botkill#json-for-ai)s
 6. Receive [action](https://github.com/avesanen/botkill#action-message) messages from AIs. Only 1 per tick per player allowed.
 
+## Join message validation
+
+The following points are validated:
+* gameId must exist or null
+* numberOfTeams must be > 1 and < 100 or null
+* playersPerTeam > 0 and < 10 or null
+* player
+    * hp + speed == 100
+    * hearing + sight == 100
+    * team: null OR (> 0 and <= game.numberOfTeams and game.teams[team].size < game.playersPerTeam)
+* player weapon
+    * firingSpeed + damage == 100
+    * carry + noise == 100
+
 ## AI messages
 
 ### Join message
+
 ```javascript
 {
     "gameId": string,               // Only if player wants to join a game
     "numberOfTeams": int,           // Only if player wants to create a game
     "playersPerTeam": int,          // Only if player wants to create a game
-    "team": int,                    // Omit if server can decide
     "player": {
         "name": string,
         "hp": int,                  // 1-99, counterpart: speed
         "speed": int,               // 1-99, counterpart: hp
         "sight": int,               // 1-99, counterpart: hearing
         "hearing": int              // 1-99, counterpart: sight
-        "team": int,
+        "team": int,                // Omit if server can decide
         "weapon": {
             "firingSpeed": int,     // 1-99, counterpart: damage
             "damage": int,          // 1-99, counterpart: firingSpeed
