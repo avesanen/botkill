@@ -118,7 +118,7 @@ define(function(require) {
 
             console.log("Jumping to frame: " + currentFrame);
 
-            scrollFinder.x = scrollBar.x + scrollBar.width / msgListener.getHistorySize() * (currentFrame-1);
+            scrollFinderX = scrollBar.x + scrollBar.width / msgListener.getHistorySize() * (currentFrame-1);
             drawHud();
             msgListener.draw(currentFrame);
         }
