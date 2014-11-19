@@ -59,10 +59,6 @@ define(function(require) {
     }
 
     function animate() {
-        if (hud.isPaused()) {
-            return;
-        }
-
         var expiredIndices = [];
 
         for (var i = 0; i < animatingSounds.length; i++) {

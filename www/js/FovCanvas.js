@@ -20,6 +20,8 @@ define(function(require) {
         ctx.canvas.width  = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
 
+        var lightData = {data:[]};
+
         function findAngle(v1, v2) {
             var angle1 = Math.atan2(-v1.y, v1.x);
             var angle2 = Math.atan2(-v2.y, v2.x);
@@ -27,9 +29,10 @@ define(function(require) {
         }
 
         function drawDarkness() {
-            if (!hud.isDebugMode()) {
-                ctx.fillStyle = "rgba(0, 0, 0, "+DARKNESS+")";
-                ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            for (var n = 3; n < lightData.data.length; n += 4) {
+                if (lightData.data[n] == 0) {
+                    lightData.data[n] = 255*DARKNESS;
+                }
             }
         }
 
@@ -40,6 +43,11 @@ define(function(require) {
             // Arc angle 0 points to right so calculate the angle between vectors 1,0 and player looking direction.
             var v1 = {x:1, y:0};
             var angle = findAngle(v1, player.velocity); // TODO: Should use looking direction instead of velocity
+
+            if (!hud.isDebugMode()) {
+                // Clear all beams drawn before
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            }
 
             ctx.save();
             ctx.translate(x, y);
@@ -56,7 +64,7 @@ define(function(require) {
                 ctx.closePath();
                 ctx.fill();
             } else {
-                 // create a linear gradient
+                // create a linear gradient
                 var grd = ctx.createLinearGradient(0, 0, sight, 0);
                 grd.addColorStop(0, 'rgba(0,0,0,'+0.0+')');
                 grd.addColorStop(1, 'rgba(0,0,0,'+DARKNESS+')');
@@ -65,10 +73,6 @@ define(function(require) {
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
                 ctx.arc(0, 0, sight, -FOV_RAD/2, FOV_RAD/2, false);
-                ctx.clip();
-
-                // clear anything inside it. Take translate into account.
-                ctx.clearRect(-x-sight, -y-sight, ctx.canvas.width+sight, ctx.canvas.height+sight);
 
                 // Put a gradient inside clipped area so that it blends smoothly
                 ctx.beginPath();
@@ -110,13 +114,29 @@ define(function(require) {
             }
 
             ctx.restore();
+
+            if (!hud.isDebugMode()) {
+                var imgData = ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height);
+                if (lightData.data.length > 0) {
+                    for (var n = 3; n < imgData.data.length; n += 4) {
+                        if (imgData.data[n] != 0 && lightData.data[n] != 0) {
+                            lightData.data[n] = Math.max(1, Math.min(imgData.data[n], lightData.data[n] - (255 - imgData.data[n]*2)));
+                        } else if (imgData.data[n] != 0) {
+                            lightData.data[n] = imgData.data[n];
+                        }
+                    }
+                } else {
+                    lightData = imgData;
+                }
+            }
         }
 
         return {
             draw: function(players) {
                 console.log("Drawing fovs...");
+
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                drawDarkness();
+                lightData = {data:[]};
 
                 for (var i = 0; i < players.length; i++) {
                     var player = players[i];
@@ -124,6 +144,11 @@ define(function(require) {
                     var y = player.y * TILE_SIZE;
 
                     drawPlayerFov(player, x, y);
+                }
+
+                if (!hud.isDebugMode()) {
+                    drawDarkness();
+                    ctx.putImageData(lightData, 0, 0);
                 }
             },
             resize: function() {

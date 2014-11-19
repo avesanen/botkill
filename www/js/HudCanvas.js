@@ -9,12 +9,15 @@ define(function(require) {
         var msgListener;
         var mockData; // TODO: Remove when server available
 
-        var debugMode = true;
+        var debugMode = config.debugMode;
         var paused = false;
         var currentFrame = 0;
 
+        var scrollFinderX = 0;
+        var previousMouseX = 0;
+        var moveFinderTimeout;
         var scrollBar = {};
-        var scrollFinder;
+        var scrollFinder = {};
 
 		var hudItems = [
             "debugModeOn",
@@ -75,15 +78,14 @@ define(function(require) {
             ctx.strokeStyle = "white";
             ctx.stroke();
 
-            if (scrollFinder == undefined) {
-                scrollFinder = {};
-                scrollFinder.width = 15;
-                scrollFinder.height = 15;
-                y = ctx.canvas.height - img.elem.height/2 - 9;
-                scrollFinder.x = x;
-                scrollFinder.y = y;
-                scrollFinder.mousedown = moveFinder;
-            }
+            // Scroll finder
+            scrollFinder.width = 15;
+            scrollFinder.height = 15;
+            y = ctx.canvas.height - img.elem.height/2 - 9;
+            scrollFinder.x = scrollFinderX > 0 ? scrollFinderX : x;
+            scrollFinderX = scrollFinder.x;
+            scrollFinder.y = y;
+            scrollFinder.mousedown = moveFinder;
             ctx.beginPath();
             ctx.arc(scrollFinder.x, scrollFinder.y, scrollFinder.width/2, 0, 2 * Math.PI, false);
             ctx.fillStyle = "rgba(200, 0, 0, 1)";
@@ -120,14 +122,18 @@ define(function(require) {
             drawHud();
             msgListener.draw(currentFrame);
         }
-        var moveFinder = function(x) {
-            scrollFinder.x = x;
-            scrollFinder.x = Math.max(scrollFinder.x, scrollBar.x);
-            scrollFinder.x = Math.min(scrollFinder.x, scrollBar.x + scrollBar.width);
-            currentFrame = Math.ceil(scrollFinder.x / (scrollBar.width / msgListener.getHistorySize()));
+        var moveFinder = function(x, deltaTime) {
+            scrollFinderX = x;
+            scrollFinderX = Math.max(scrollFinderX, scrollBar.x);
+            scrollFinderX = Math.min(scrollFinderX, scrollBar.x + scrollBar.width);
+            currentFrame = Math.ceil(scrollFinderX / (scrollBar.width / msgListener.getHistorySize()));
             drawHud();
-            console.log(currentFrame);
-            msgListener.draw(currentFrame);
+
+            // Redraw only if finder moved enough
+                moveFinderTimeout = setTimeout(function() {
+                    msgListener.draw(currentFrame);
+                    scrollFinder.previousMousePos = x;
+                }, 500);
         }
 
         return {
@@ -135,7 +141,7 @@ define(function(require) {
             isPaused: function() { return paused; },
             setCurrentFrame: function(frame) {
                 currentFrame = frame;
-                scrollFinder.x = scrollBar.x + scrollBar.width / msgListener.getHistorySize() * (currentFrame-1);
+                scrollFinderX = scrollBar.x + scrollBar.width / msgListener.getHistorySize() * (currentFrame-1);
                 drawHud();
             },
             getCurrentFrame: function() { return currentFrame; },
@@ -164,8 +170,9 @@ define(function(require) {
 
                 ctx.canvas.addEventListener('mousedown', function(evt) {
                     var mousePos = getMousePos(evt);
-                    if (mousePos.y > scrollFinder.y - 3 && mousePos.y < scrollFinder.y + scrollFinder.height + 3 && mousePos.x > scrollFinder.x && mousePos.x < scrollFinder.x + scrollFinder.width) {
+                    if (mousePos.y > scrollFinder.y - 3 && mousePos.y < scrollFinder.y + scrollFinder.height + 3 && mousePos.x > scrollFinderX && mousePos.x < scrollFinderX + scrollFinder.width) {
                         scrollFinder.clicked = true;
+                        previousMouseX = mousePos.x;
                         pause();
                     }
                 }, false);
@@ -178,6 +185,9 @@ define(function(require) {
                     if (scrollFinder.clicked) {
                         paused = true;
                         var mousePos = getMousePos(evt);
+
+                        // Redraw only after 500ms without moving mouse
+                        clearTimeout(moveFinderTimeout);
                         moveFinder(mousePos.x);
                     }
                 }, false);

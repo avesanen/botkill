@@ -7,6 +7,7 @@
  */
 define(function() {
     return {
+        debugMode: true,
         tilesXCount: 21,
         tilesYCount: 13,
         getTileSize : function() {
