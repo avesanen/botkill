@@ -286,20 +286,6 @@ The first message to sent to server. Send only once per game.
     "gameId": string,               // Only if player wants to join a game.
     "numberOfTeams": int,           // Only if player wants to create a game.
     "playersPerTeam": int,          // Only if player wants to create a game.
-    "player": {
-        "name": string,
-        "hp": int,                  // 1-99, counterpart: speed
-        "speed": int,               // 1-99, counterpart: hp
-        "sight": int,               // 1-99, counterpart: hearing
-        "hearing": int              // 1-99, counterpart: sight
-        "team": int,                // Omit if server can decide
-        "weapon": {
-            "firingSpeed": int,     // 1-99, counterpart: damage
-            "damage": int,          // 1-99, counterpart: firingSpeed
-            "carry": int,           // 1-99, counterpart: noise
-            "noise": int,           // 1-99, counterpart: carry
-        }
-    }
 }
 ```
 
