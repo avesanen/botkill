@@ -32,7 +32,7 @@ AI programming game in spirit of old top-down kill'em'all games.
 3. If message is valid, server checks if gameId was specified
     1. If gameId found (and it's awaiting for more players), select the game
     2. If gameId not found, create a new game and generate the map based on the join message data
-4. Send the [game data](#game-data) containing a unique visualization URL and map data for the game
+4. Server sends the [game data](#game-data) message containing a unique visualization URL and map data for the game
 5. AI sends [create player](#create-player-message) message to the server
 6. Server [validates](#create-player-validation) the create player message
     1. If player is valid, append it to the game
