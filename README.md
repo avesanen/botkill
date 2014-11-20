@@ -106,15 +106,15 @@ This will be received every tick when the game is on.
         "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings
         "raining": boolean,         // Raing gives -50% to hearing and -20% to sight
         "rainPropability": float,   // Checked once per minute. Raining might stop in 5% propability.
-        "darkness": float,          // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-        "tiles": [
-            {
-                "type": int,        // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
-                "x": int,           // Index on x axis
-                "y": int,           // Index on y axis
-            }
-        ]
+        "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
     },
+    "tiles": [
+         {
+             "type": int,        // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
+             "x": int,           // Index on x axis
+             "y": int,           // Index on y axis
+         }
+     ],
     "items": [
         {
             "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
@@ -175,15 +175,8 @@ This is received by AI when a join request is accepted
     "map": {
         "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings
         "raining": boolean,         // Raing gives -50% to hearing and -20% to sight
-        "rainPropability": float,   // Checked once per minute. Raining might stop in 5% propability.
-        "darkness": float,          // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-        "tiles": [                  // Tiles that are in this AI's view area
-            {
-                "type": int,        // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
-                "x": int,           // Index on x axis
-                "y": int,           // Index on y axis
-            }
-        ]
+        "rainPropability": float,   // Checked once per minute. Raining might stop with 5% propability.
+        "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
     }
 }
 ```
