@@ -52,6 +52,10 @@ The following points are validated:
 * gameId must exist or null
 * numberOfTeams must be > 1 and < 100 or null
 * playersPerTeam > 0 and < 10 or null
+* rainingPropability >= 0 and <= 1
+* roundTime in seconds > 10 < 300
+* rounds > 0 and <= 5
+* darkness >= 0 and <= 1
 
 ## Create player validation
 * hp + speed == 100
@@ -105,7 +109,7 @@ This will be received every tick when the game is on.
     "map": {
         "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings
         "raining": boolean,         // Raing gives -50% to hearing and -20% to sight
-        "rainPropability": float,   // Checked once per minute. Raining might stop in 5% propability.
+        "rainPropability": float,   // Checked once per 10 seconds. Raining might stop in 5% propability.
         "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
     },
     "tiles": [
@@ -175,7 +179,7 @@ This is received by AI when a join request is accepted
     "map": {
         "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings
         "raining": boolean,         // Raing gives -50% to hearing and -20% to sight
-        "rainPropability": float,   // Checked once per minute. Raining might stop with 5% propability.
+        "rainPropability": float,   // Checked once per 10 seconds. Raining might stop with 5% propability.
         "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
     }
 }
@@ -225,8 +229,8 @@ Sent from server on every tick when the game is on
     ],
     "map": {
         "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings.
-        "raining": boolean,         // Raing gives -50% to hearing and -20% to sight.
-        "rainPropability": float,   // Checked once per minute. Raining might stop in 5% propability.
+        "raining": boolean,         // Raining gives -50% to hearing and -20% to sight.
+        "rainPropability": float,   // Checked once per 10 seconds. Raining might stop in 5% propability.
         "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
     },
     "items": [                      // Items that are in this AI's view area.
@@ -279,6 +283,12 @@ The first message to sent to server. Send only once per game.
     "gameId": string,               // Only if player wants to join a game.
     "numberOfTeams": int,           // Only if player wants to create a game.
     "playersPerTeam": int,          // Only if player wants to create a game.
+    "indoor": boolean               // Whether map is indoors or outdoors
+    "raining": boolean              // Whether its raining or not. Rainings gives -50% to hearing and -20% to sight.
+    "rainingPropability": float     // Chances to start raining during the game. Checked once per 10 seconds.
+    "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
+    "roundTime": int                // Round time in seconds.
+    "rounds": int                   // How many rounds before game ends
 }
 ```
 
