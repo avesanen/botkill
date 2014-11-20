@@ -60,7 +60,7 @@ The following points are validated:
 * weapon
     * firingSpeed + damage == 100
     * carry + noise == 100
-    * 
+
 ## Server messages
 
 Messages sent by the server
