@@ -6,7 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 define(function(require) {
-        var TILE_SIZE = require("config").TILE_SIZE;
+        var hud = require("HudCanvas");
+        var config = require("config");
+        var TILE_SIZE = config.getTileSize();
         var PLAYER_SIZE = TILE_SIZE/2;
 
         var ctx = document.getElementById("playercanvas").getContext("2d");
@@ -37,7 +39,12 @@ define(function(require) {
             ctx.beginPath();
             ctx.arc(x, y, player.hearing*TILE_SIZE/20, 0, 2 * Math.PI, false);
             ctx.lineWidth = 1;
-            ctx.fillStyle = "rgba(240, 255, 90, 0.08)";
+            var opacity = hud.isDebugMode() ? 0.1 : 0.08;
+            ctx.fillStyle = "rgba(240, 255, 90, " + opacity + ")";
+            if (hud.isDebugMode()) {
+                ctx.strokeStyle = "rgba(0,0,0,0.5)";
+                ctx.stroke();
+            }
             ctx.fill();
         }
 
@@ -74,11 +81,11 @@ define(function(require) {
             init: function(callback) {
                 img.src = "gfx/player.png";
                 img.onload = callback;
-                ctx.canvas.width  = window.innerWidth;
-                ctx.canvas.height = window.innerHeight;
+                this.resize();
             },
             draw: function(players) {
                 console.log("Drawing players...");
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
                 for (i = 0; i < players.length; i++) {
                     var player = players[i];
@@ -90,6 +97,12 @@ define(function(require) {
                     drawName(player, x, y);
                     drawHealthBar(player, x, y);
                 }
+            },
+            resize: function() {
+                TILE_SIZE = config.getTileSize();
+                PLAYER_SIZE = TILE_SIZE/2;
+                ctx.canvas.width  = window.innerWidth;
+                ctx.canvas.height = window.innerHeight;
             }
         }
     }

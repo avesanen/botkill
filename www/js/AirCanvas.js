@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 define(function(require) {
-        var TILE_SIZE = require("config").TILE_SIZE;
+        var config = require("config");
+        var TILE_SIZE = config.getTileSize();
         var ctx = document.getElementById("aircanvas").getContext("2d");
         var textureMap = {};
 
@@ -44,12 +45,17 @@ define(function(require) {
                     }
                 }
 
-                ctx.canvas.width  = window.innerWidth;
-                ctx.canvas.height = window.innerHeight;
+                this.resize();
             },
             draw: function(items, sounds, bullets) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 drawItems(items);
                 drawBullets(bullets);
+            },
+            resize: function() {
+                TILE_SIZE = config.getTileSize();
+                ctx.canvas.width  = window.innerWidth;
+                ctx.canvas.height = window.innerHeight;
             }
         }
     }
