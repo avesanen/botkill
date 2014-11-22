@@ -279,16 +279,18 @@ Messages that AIs should send to the server
 The first message to sent to server. Send only once per game.
 
 ```javascript
-{
-    "gameId": string,               // Only if player wants to join a game.
-    "numberOfTeams": int,           // Only if player wants to create a game.
-    "playersPerTeam": int,          // Only if player wants to create a game.
-    "indoor": boolean               // Whether map is indoors or outdoors
-    "raining": boolean              // Whether its raining or not. Rainings gives -50% to hearing and -20% to sight.
-    "rainingPropability": float     // Chances to start raining during the game. Checked once per 10 seconds.
-    "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-    "roundTime": int                // Round time in seconds.
-    "rounds": int                   // How many rounds before game ends
+{ "join":
+    {
+        "gameId": string,               // Only if player wants to join a game.
+        "numberOfTeams": int,           // Only if player wants to create a game.
+        "playersPerTeam": int,          // Only if player wants to create a game.
+        "indoor": boolean               // Whether map is indoors or outdoors
+        "raining": boolean              // Whether its raining or not. Rainings gives -50% to hearing and -20% to sight.
+        "rainingPropability": float     // Chances to start raining during the game. Checked once per 10 seconds.
+        "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
+        "roundTime": int                // Round time in seconds.
+        "rounds": int                   // How many rounds before game ends
+    }
 }
 ```
 
@@ -298,17 +300,19 @@ After [join](#join-message) message is accepted by the server and [game data](#g
 
 ```javascript
 {
-    "name": string,
-    "hp": int,                  // 1-99, counterpart: speed
-    "speed": int,               // 1-99, counterpart: hp
-    "sight": int,               // 1-99, counterpart: hearing
-    "hearing": int              // 1-99, counterpart: sight
-    "team": int,                // Omit if server can decide.
-    "weapon": {
-        "firingSpeed": int,     // 1-99, counterpart: damage
-        "damage": int,          // 1-99, counterpart: firingSpeed
-        "carry": int,           // 1-99, counterpart: noise
-        "noise": int,           // 1-99, counterpart: carry
+    "createPlayer": {
+        "name": string,
+        "hp": int,                  // 1-99, counterpart: speed
+        "speed": int,               // 1-99, counterpart: hp
+        "sight": int,               // 1-99, counterpart: hearing
+        "hearing": int              // 1-99, counterpart: sight
+        "team": int,                // Omit if server can decide.
+        "weapon": {
+            "firingSpeed": int,     // 1-99, counterpart: damage
+            "damage": int,          // 1-99, counterpart: firingSpeed
+            "carry": int,           // 1-99, counterpart: noise
+            "noise": int,           // 1-99, counterpart: carry
+        }
     }
 }
 ```
@@ -319,8 +323,10 @@ Once per tick per player. Only the first action message will be registered and a
 
 ```javascript
 {
-    "type": int,            // 0=MOVE, 1=SHOOT, 2=LOOK
-    "direction": vector     // {x:float, y:float}
+    "action": {
+        "type": int,            // 0=MOVE, 1=SHOOT, 2=LOOK
+        "direction": vector     // {x:float, y:float}
+    }
 }
 ```
 
