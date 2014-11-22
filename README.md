@@ -279,8 +279,8 @@ Messages that AIs should send to the server
 The first message to sent to server. Send only once per game.
 
 ```javascript
-{ "join":
-    {
+{ 
+    "join": {
         "gameId": string,               // Only if player wants to join a game.
         "numberOfTeams": int,           // Only if player wants to create a game.
         "playersPerTeam": int,          // Only if player wants to create a game.
