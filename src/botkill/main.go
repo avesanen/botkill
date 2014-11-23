@@ -19,15 +19,16 @@ func debugGnatsd() {
 
 func main() {
 	// Start game server
-	s := webserver.NewServer("localhost", "8080")
+	s := webserver.NewWebServer("localhost", "8080")
 	log.Println("Got server:", s)
 
 	// Test aiserver nats connection
 	var c *nats.Conn
+	log.Println("Connecting to NATS server.")
 	natsc, err := nats.Connect(nats.DefaultURL)
 
 	if err != nil {
-		log.Println("Can't connect to NATS, starting debug NATS server")
+		log.Println("Can't connect to external NATS, starting internal NATS server!")
 		debugGnatsd()
 		natsc, err := nats.Connect(nats.DefaultURL)
 		if err != nil {
