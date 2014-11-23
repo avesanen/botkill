@@ -20,6 +20,7 @@ AI programming game in spirit of old top-down kill'em'all games.
     * [Experience message](#experience-message)
 
 **[AI messages](#ai-messages)**
+* [Create game message](#create-game-message)
 * [Join message](#join-message)
 * [Create player message](#create-player-message)
 * [Action message](#action-message)
@@ -82,8 +83,11 @@ This will be received every tick when the game is on.
     "rounds": int,                  // How many rounds there will be
     "currentRound": int,            // What is the current round
     "timeLeft": int,                // How many seconds bots have time before round ends
+    "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
+    "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
+    "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
     "players": [
-        {
+        "player": {
             "id": string,
             "name": string,
             "x": float,             // Tile on x-axis
@@ -106,21 +110,15 @@ This will be received every tick when the game is on.
             }
         }
     ],
-    "map": {
-        "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings
-        "raining": boolean,         // Raing gives -50% to hearing and -20% to sight
-        "rainPropability": float,   // Checked once per 10 seconds. Raining might stop in 5% propability.
-        "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-    },
     "tiles": [
-         {
+         "tile": {
              "type": int,        // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
              "x": int,           // Index on x axis
              "y": int,           // Index on y axis
          }
      ],
     "items": [
-        {
+        "item": {
             "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
             "x": int,               // Tile on x-axis
             "y": int,               // Tile on y-axis
@@ -129,14 +127,14 @@ This will be received every tick when the game is on.
         }
     ],
     "bullets": [
-        {
+        "bullet": {
             "x": float,
             "y": float,
             "velocity": vector,
         }
     ],
     "sounds": [
-        {
+        "sound": {
             "type": int,            // 0=WALK, 1=SHOOT
             "x": float,             // Tile on x-axis
             "y": float,             // Tile on y-axis
@@ -153,7 +151,7 @@ This is sent to the visualization once when the whole game ends.
 ```javascript
 {
     "scoreboard": [
-        {
+        "score": {
             "player": string,       // Player name
             "points": int           // kills, deaths, survival count
         }
@@ -175,13 +173,10 @@ This is received by AI when a join request is accepted
     "visualizationUrl:" string,     // e.g. http://botkill.com/{gameId}
     "rounds": int,                  // How many rounds there will be
     "currentRound": int,            // What is the current round
-    "timeLeft": int,                // How many seconds bots have time before round ends
-    "map": {
-        "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings
-        "raining": boolean,         // Raing gives -50% to hearing and -20% to sight
-        "rainPropability": float,   // Checked once per 10 seconds. Raining might stop with 5% propability.
-        "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-    }
+    "roundTime": int,               // How many seconds bots have time before round ends
+    "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
+    "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
+    "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
 }
 ```
 
@@ -192,6 +187,9 @@ Sent from server on every tick when the game is on
 ```javascript
 {
     "timeLeft": int,                // How many seconds left before round ends
+    "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings.
+    "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
+    "darkness": float,              // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
     "myPlayer": {
         "id": string,
         "name": string,
@@ -215,7 +213,7 @@ Sent from server on every tick when the game is on
         }
     },
     "players": [                    // Players that are in this AI's view area.
-        {
+        "player": {
             "id": string,
             "name": string,
             "x": float,             // Tile on x-axis
@@ -227,14 +225,8 @@ Sent from server on every tick when the game is on
             "isDead": boolean       // For AIs to figure out how many enemies left.
         }
     ],
-    "map": {
-        "indoor": boolean,          // Indoor contains more walls and rooms, outdoor has more openings.
-        "raining": boolean,         // Raining gives -50% to hearing and -20% to sight.
-        "rainPropability": float,   // Checked once per 10 seconds. Raining might stop in 5% propability.
-        "darkness": float           // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-    },
     "items": [                      // Items that are in this AI's view area.
-        {
+        "item": {
             "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
             "x": int,               // Tile on x-axis.
             "y": int,               // Tile on y-axis.
@@ -243,14 +235,14 @@ Sent from server on every tick when the game is on
         }
     ],
     "bullets": [                    // Bullets that are in this AI's view area.
-        {
+        "bullet": {
             "x": float,
             "y": float,
             "velocity": vector,
         }
     ],
     "sounds": [                     // Sounds that are in this AI's hearing area.
-        {
+        "sound": {
             "type": int,            // 0=WALK, 1=SHOOT
             "x": float,             // Tile on x-axis.
             "y": float,             // Tile on y-axis.
@@ -266,13 +258,33 @@ Received by AIs when a round ends and new round will start. These points may be 
 
 ```javascript
 {
-    "points": int       // May be distributed freely in any player or weapon skill
+    "experience": {
+        "points": int       // May be distributed freely in any player or weapon skill
+    }
 }
 ```
 
 ## AI messages
 
 Messages that AIs should send to the server
+
+### Create game message
+
+This message will not hold the socket open. So after this, connect a new socket and join the game you created.
+
+```javascript
+{
+    "createGame": {
+        "numberOfTeams": int,           // Only if player wants to create a game.
+        "playersPerTeam": int,          // Only if player wants to create a game.
+        "indoor": boolean,              // Whether map is indoors or outdoors
+        "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
+        "darkness": float,              // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
+        "roundTime": int,               // Round time in seconds.
+        "rounds": int                   // How many rounds before game ends
+    }
+}
+```
 
 ### Join message
 
@@ -282,14 +294,6 @@ The first message to sent to server. Send only once per game.
 { 
     "join": {
         "gameId": string,               // Only if player wants to join a game.
-        "numberOfTeams": int,           // Only if player wants to create a game.
-        "playersPerTeam": int,          // Only if player wants to create a game.
-        "indoor": boolean               // Whether map is indoors or outdoors
-        "raining": boolean              // Whether its raining or not. Rainings gives -50% to hearing and -20% to sight.
-        "rainingPropability": float     // Chances to start raining during the game. Checked once per 10 seconds.
-        "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-        "roundTime": int                // Round time in seconds.
-        "rounds": int                   // How many rounds before game ends
     }
 }
 ```
@@ -338,15 +342,17 @@ Experience points (0-n) may be distributed freely in any player or weapon skill.
 
 ```javascript
 {
-    "hp": int,                  
-    "speed": int,               
-    "sight": int,               
-    "hearing": int              
-    "weapon": {
-        "firingSpeed": int,     
-        "damage": int,      
-        "carry": int,       
-        "noise": int,       
+    "levelup": {
+        "hp": int,
+        "speed": int,
+        "sight": int,
+        "hearing": int
+        "weapon": {
+            "firingSpeed": int,
+            "damage": int,
+            "carry": int,
+            "noise": int,
+        }
     }
 }
 ```
