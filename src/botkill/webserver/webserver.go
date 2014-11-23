@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"github.com/apcera/nats"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -10,9 +11,10 @@ import (
 // hosting.
 type Server struct {
 	//Games  []*game.Game `json:"games"`
-	Host   string      `json:"host"`
-	Port   int         `json:"port"`
-	Router *mux.Router `json:"router"`
+	Host   string            `json:"host"`
+	Port   int               `json:"port"`
+	Router *mux.Router       `json:"-"`
+	nc     *nats.EncodedConn `json:"-"`
 }
 
 // NewServer will start the http server, that will listen to port 8080,

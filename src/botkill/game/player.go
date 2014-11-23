@@ -15,11 +15,3 @@ type Weapon struct {
 	FiringSpeed float32 `json:"firingSpeed"`
 	Noise       float32 `json:"noise"`
 }
-
-/*
-Commands:
-{"move":{"x":10.0, "y":-5.0}}
-{"shoot":{"angle":"180.0"}}
-{"look":{"angle":"90.0"}}
-{"reload":{}}
-*/

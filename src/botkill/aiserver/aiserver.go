@@ -1,19 +1,19 @@
 package aiserver
 
 import (
-	"botkill/messages"
-	"bufio"
+	//"botkill/messages"
+	"botkill/util"
 	"github.com/apcera/nats"
 	//"io"
-	"encoding/json"
+	//"encoding/json"
 	"log"
 	"net"
-	"runtime"
 )
 
 type AiServer struct {
-	Id string
-	nc *nats.Conn
+	Id      string            `json:"id"`
+	nc      *nats.EncodedConn `json:"-"`
+	AiConns []*AiConn         `json:"aiConns"`
 }
 
 func (ai *AiServer) AiMsgHandler(msg *nats.Msg) {
@@ -21,63 +21,50 @@ func (ai *AiServer) AiMsgHandler(msg *nats.Msg) {
 	ai.nc.Publish(msg.Reply, []byte("ack"))
 }
 
-func NewAiServer() *AiServer {
+func NewAiServer(nc *nats.EncodedConn) *AiServer {
 	ai := &AiServer{}
-	runtime.SetFinalizer(ai, func(*AiServer) { log.Println("Finalized!") })
-
-	ai.Id = "test"
-
-	// Connect Aiserver to nats
-	nc, err := nats.Connect(nats.DefaultURL)
-	if err != nil {
-		log.Panicln("Can't conenct to NATS:", err.Error())
-	}
 	ai.nc = nc
+	ai.Id = util.Uuid()
 
 	// Subscribe ai id to nats channel
 	ai.nc.Subscribe("aiserver", ai.AiMsgHandler)
 	return ai
 }
 
-func Listen() {
-	// Listen on TCP port 2000 on all interfaces.
+func (ai *AiServer) Listen(port int) {
 	l, err := net.Listen("tcp", ":2000")
 	if err != nil {
-		log.Fatal(err)
+		log.Println("AiServer.Listen Error:", err.Error())
+		return
 	}
 	defer l.Close()
 	for {
-		// Wait for a connection.
-		conn, err := l.Accept()
+		sc, err := l.Accept()
 		if err != nil {
-			log.Fatal(err)
+			log.Println("AiServer.Listen.Accept Error:", err.Error())
 		}
+		ac, err := NewAiConn(ai.nc)
+		if err != nil {
+			log.Println("Can't accept connection:", err)
+			continue
+		}
+		ac.AiServer = ai
+		go ac.HandleConnection(sc, ai.nc)
+		ai.AddAiConn(ac)
+	}
+}
 
-		// Handle the connection in a new goroutine.
-		// The loop then returns to accepting, so that
-		// multiple connections may be served concurrently.
-		go func(c net.Conn) {
-			scanner := bufio.NewScanner(c)
-			for scanner.Scan() {
-				line := scanner.Bytes()
-				var m messages.AiMessage
-				err := json.Unmarshal(line, &m)
-				if err != nil {
-					log.Println("Can't unmarshal game message:", err.Error())
-				} else {
-					log.Println(m)
-					if m.Join != nil {
-						log.Println("Got join message!")
-					}
-					if m.CreatePlayer != nil {
-						log.Println("Got createPlayer message!")
-					}
-					if m.Action != nil {
-						log.Println("Got action message!")
-					}
-				}
-			}
-			c.Close()
-		}(conn)
+func (ai *AiServer) AddAiConn(ac *AiConn) {
+	log.Println("Adding ai connection")
+	ai.AiConns = append(ai.AiConns, ac)
+}
+
+func (ai *AiServer) RmAiConn(ac *AiConn) {
+	log.Println("Removing ai connection")
+	for i := range ai.AiConns {
+		if ai.AiConns[i] == ac {
+			ai.AiConns = append(ai.AiConns[:i], ai.AiConns[i+1:]...)
+			return
+		}
 	}
 }

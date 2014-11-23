@@ -2,6 +2,7 @@ package main
 
 import (
 	"botkill/aiserver"
+	"botkill/gameserver"
 	"botkill/webserver"
 	"github.com/apcera/nats"
 	"log"
@@ -14,31 +15,49 @@ func main() {
 	s := webserver.NewServer("localhost", "8080")
 	log.Println("Got server:", s)
 
-	// aiserver test
-	ai := aiserver.NewAiServer()
-	log.Println(ai)
-
 	// Test aiserver nats connection
-	nc, err := nats.Connect(nats.DefaultURL)
+	c, err := nats.Connect(nats.DefaultURL)
 	if err != nil {
 		log.Panicln("Can't connect to NATS:", err.Error())
 	}
-
-	msg, err := nc.Request("aiserver", []byte("pls ack"), 10*time.Millisecond)
+	nc, err := nats.NewEncodedConn(c, "json")
 	if err != nil {
-		log.Panicln("Can't get ack from aiserver", err.Error())
+		log.Panicln("Can't craete encoded NATS connection:", err.Error())
 	}
-	log.Println("Response from aiserver:", string(msg.Data))
 
-	go aiserver.Listen()
+	// gameServer instance
+	gs := gameserver.NewGameServer(nc)
+	log.Println(gs)
+
+	// aiServer  instance
+	ai := aiserver.NewAiServer(nc)
+	go ai.Listen(2000)
+	log.Println(ai)
 
 	// Loop forever and log goroutine and games counts if they change.
 	goRoutines := 0
+	aiConnections := 0
+	games := 0
 	for {
+		// NATS stats debug (TODO: post to influxdb)
+		//nim := c.InMsgs
+		//nib := c.InBytes
+		//nom := c.OutMsgs
+		//nob := c.OutBytes
+		//log.Println(nim, nib, nom, nob)
+
 		time.Sleep(time.Second * 1)
 		if goRoutines != runtime.NumGoroutine() {
 			goRoutines = runtime.NumGoroutine()
 			log.Println("Goroutines [", goRoutines, "]")
+		}
+		if aiConnections != len(ai.AiConns) {
+			aiConnections = len(ai.AiConns)
+			log.Println("AiConnections [", aiConnections, "]")
+		}
+		if games != len(gs.Games) {
+			games = len(gs.Games)
+			log.Println("Games [", games, "]")
 		}
 	}
 }

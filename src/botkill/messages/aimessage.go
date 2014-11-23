@@ -2,12 +2,12 @@ package messages
 
 type AiMessage struct {
 	Join         *JoinMessage         `json:"join,omitempty"`
-	CreatePlayer *CreatePlayerMessage `json:"create,omitempty"`
+	CreateGame   *CreateGameMessage   `json:"createGame,omitempty"`
+	CreatePlayer *CreatePlayerMessage `json:"createPlayer,omitempty"`
 	Action       *ActionMessage       `json:"action,omitempty"`
 }
 
-type JoinMessage struct {
-	GameId             string  `json:"gameId"`
+type CreateGameMessage struct {
 	NumberOfTeams      string  `json:"numberOfTeams"`
 	PlayerPerTeam      int     `json:"playerPerTeam"`
 	Indoor             bool    `json:"indoor"`
@@ -16,6 +16,10 @@ type JoinMessage struct {
 	Darkness           float32 `json:"darkness"`
 	RoundTime          int     `json:"roundTime"`
 	Rounds             int     `json:"rounds"`
+}
+
+type JoinMessage struct {
+	GameId string `json:"gameId"`
 }
 
 type CreatePlayerMessage struct {

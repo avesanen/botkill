@@ -10,6 +10,7 @@ go get botkill
 go get botkill/game
 go get botkill/aiserver
 go get botkill/webserver
+go get botkill/gameserver
 
 go install botkill
 ./test.sh
