@@ -4,11 +4,18 @@ import (
 	"botkill/aiserver"
 	"botkill/gameserver"
 	"botkill/webserver"
+	gnatsd "github.com/apcera/gnatsd/server"
 	"github.com/apcera/nats"
 	"log"
 	"runtime"
 	"time"
 )
+
+func debugGnatsd() {
+	opts := gnatsd.Options{}
+	s := gnatsd.New(&opts)
+	go s.Start()
+}
 
 func main() {
 	// Start game server
@@ -16,13 +23,25 @@ func main() {
 	log.Println("Got server:", s)
 
 	// Test aiserver nats connection
-	c, err := nats.Connect(nats.DefaultURL)
+	var c *nats.Conn
+	natsc, err := nats.Connect(nats.DefaultURL)
+
 	if err != nil {
-		log.Panicln("Can't connect to NATS:", err.Error())
+		log.Println("Can't connect to NATS, starting debug NATS server")
+		debugGnatsd()
+		natsc, err := nats.Connect(nats.DefaultURL)
+		if err != nil {
+			log.Panicln("Can't start NATS debug server, PANIC:", err.Error())
+		} else {
+			c = natsc
+		}
+	} else {
+		c = natsc
 	}
+
 	nc, err := nats.NewEncodedConn(c, "json")
 	if err != nil {
-		log.Panicln("Can't craete encoded NATS connection:", err.Error())
+		log.Panicln("Can't create encoded NATS connection:", err.Error())
 	}
 
 	// gameServer instance
