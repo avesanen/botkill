@@ -23,6 +23,8 @@ public class MessageListener extends Thread {
     }
 
     public void run() {
+        System.out.println("Starting game loop...");
+
         while (!isInterrupted()) {
 
             String msg = null;

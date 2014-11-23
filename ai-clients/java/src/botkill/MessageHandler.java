@@ -12,7 +12,7 @@ public class MessageHandler {
 
     public String handle(String msg) {
         JSONObject msgJson = new JSONObject(msg);
-        
+
 
         return "";
     }

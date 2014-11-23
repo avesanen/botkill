@@ -16,10 +16,9 @@ public class AI {
             JSONObject createGame = new JSONObject();
             createGame.put("createGame", new JSONObject(new CreateGame()));
 
-            client.getWriter().writeBytes(
-                createGame.toString()
-            );
+            client.send(createGame.toString());
 
+            System.out.println("Game ID: " + client.getReader().readLine());
         }
         // Otherwise join game
         else {
@@ -28,7 +27,7 @@ public class AI {
             joinGame.put("join", gameId);
 
             // Write join message to the server
-            client.getWriter().writeBytes(joinGame.toString());
+            client.send(joinGame.toString());
 
             // Listen to server messages
             MessageListener listener = new MessageListener(client.getReader(), client.getWriter());

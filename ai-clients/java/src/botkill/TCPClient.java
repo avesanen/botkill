@@ -15,7 +15,7 @@ import java.net.Socket;
 public class TCPClient {
 
     private final String HOST = "localhost";
-    private final int PORT = 6789;
+    private final int PORT = 2000;
 
     private Socket clientSocket;
     private DataOutputStream out;
@@ -42,6 +42,7 @@ public class TCPClient {
     public void send(String msg) {
         try {
             out.writeBytes(msg + '\n');
+            out.flush();
         } catch (IOException e) {
             System.out.println("Unable to send msg to server. Exception: " + e.getMessage());
         }
