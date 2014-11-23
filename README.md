@@ -80,67 +80,69 @@ This will be received every tick when the game is on.
 
 ```javascript
 {
-    "rounds": int,                  // How many rounds there will be
-    "currentRound": int,            // What is the current round
-    "timeLeft": int,                // How many seconds bots have time before round ends
-    "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
-    "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
-    "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-    "players": [
-        "player": {
-            "id": string,
-            "name": string,
-            "x": float,             // Tile on x-axis
-            "y": float,             // Tile on y-axis
-            "velocity": vector,     // {x:float,y:float}
-            "lookAt": vector,       // {x:float,y:float}
-            "shootAt": vector,      // {x:float,y:float} only if player just shoot
-            "currentHp": int,       // 1-99
-            "maxHp": int,           // 1-99, counterpart: speed
-            "speed": int,           // 1-99, counterpart: hp
-            "sight": int,           // 1-99, counterpart: hearing
-            "hearing": int          // 1-99, counterpart: sight
-            "team": int,
-            "isHit": boolean        // If player was just hit
-            "weapon": {
-                "firingSpeed": int, // 1-99, counterpart: damage
-                "damage": int,      // 1-99, counterpart: firingSpeed
-                "carry": int,       // 1-99, counterpart: noise
-                "noise": int,       // 1-99, counterpart: carry
+    "gamestate": {
+        "rounds": int,                  // How many rounds there will be
+        "currentRound": int,            // What is the current round
+        "timeLeft": int,                // How many seconds bots have time before round ends
+        "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
+        "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
+        "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
+        "players": [
+            "player": {
+                "id": string,
+                "name": string,
+                "x": float,             // Tile on x-axis
+                "y": float,             // Tile on y-axis
+                "velocity": vector,     // {x:float,y:float}
+                "lookAt": vector,       // {x:float,y:float}
+                "shootAt": vector,      // {x:float,y:float} only if player just shoot
+                "currentHp": int,       // 1-99
+                "maxHp": int,           // 1-99, counterpart: speed
+                "speed": int,           // 1-99, counterpart: hp
+                "sight": int,           // 1-99, counterpart: hearing
+                "hearing": int          // 1-99, counterpart: sight
+                "team": int,
+                "isHit": boolean        // If player was just hit
+                "weapon": {
+                    "firingSpeed": int, // 1-99, counterpart: damage
+                    "damage": int,      // 1-99, counterpart: firingSpeed
+                    "carry": int,       // 1-99, counterpart: noise
+                    "noise": int,       // 1-99, counterpart: carry
+                }
             }
-        }
-    ],
-    "tiles": [
-         "tile": {
-             "type": int,        // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
-             "x": int,           // Index on x axis
-             "y": int,           // Index on y axis
-         }
-     ],
-    "items": [
-        "item": {
-            "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
-            "x": int,               // Tile on x-axis
-            "y": int,               // Tile on y-axis
-            "width": float,         // Relative to tile size
-            "height": float         // e.g size 2 == 2*TILE_SIZE pixels
-        }
-    ],
-    "bullets": [
-        "bullet": {
-            "x": float,
-            "y": float,
-            "velocity": vector,
-        }
-    ],
-    "sounds": [
-        "sound": {
-            "type": int,            // 0=WALK, 1=SHOOT
-            "x": float,             // Tile on x-axis
-            "y": float,             // Tile on y-axis
-            "noise":float           // 1-99
-        }
-    ]
+        ],
+        "tiles": [
+             "tile": {
+                 "type": int,        // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
+                 "x": int,           // Index on x axis
+                 "y": int,           // Index on y axis
+             }
+         ],
+        "items": [
+            "item": {
+                "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
+                "x": int,               // Tile on x-axis
+                "y": int,               // Tile on y-axis
+                "width": float,         // Relative to tile size
+                "height": float         // e.g size 2 == 2*TILE_SIZE pixels
+            }
+        ],
+        "bullets": [
+            "bullet": {
+                "x": float,
+                "y": float,
+                "velocity": vector,
+            }
+        ],
+        "sounds": [
+            "sound": {
+                "type": int,            // 0=WALK, 1=SHOOT
+                "x": float,             // Tile on x-axis
+                "y": float,             // Tile on y-axis
+                "noise":float           // 1-99
+            }
+        ]
+    }
 }
 ```
 
@@ -169,14 +171,16 @@ This is received by AI when a join request is accepted
 
 ```javascript
 {
-    "id": string,
-    "visualizationUrl:" string,     // e.g. http://botkill.com/{gameId}
-    "rounds": int,                  // How many rounds there will be
-    "currentRound": int,            // What is the current round
-    "roundTime": int,               // How many seconds bots have time before round ends
-    "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
-    "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
-    "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
+    "gamedata": {
+        "id": string,
+        "visualizationUrl:" string,     // e.g. http://botkill.com/{gameId}
+        "rounds": int,                  // How many rounds there will be
+        "currentRound": int,            // What is the current round
+        "roundTime": int,               // How many seconds bots have time before round ends
+        "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
+        "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
+        "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
+    }
 }
 ```
 
@@ -186,69 +190,71 @@ Sent from server on every tick when the game is on
 
 ```javascript
 {
-    "timeLeft": int,                // How many seconds left before round ends
-    "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings.
-    "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
-    "darkness": float,              // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-    "myPlayer": {
-        "id": string,
-        "name": string,
-        "x": float,                 // Tile on x-axis
-        "y": float,                 // Tile on y-axis
-        "velocity": vector,         // {x:float,y:float}
-        "lookAt": vector,           // {x:float,y:float}
-        "shootAt": vector,          // {x:float,y:float} only if player has just shoot.
-        "currentHp": int,           // 1-99
-        "maxHp": int,               // 1-99, counterpart: speed
-        "speed": int,               // 1-99, counterpart: hp
-        "sight": int,               // 1-99, counterpart: hearing
-        "hearing": int              // 1-99, counterpart: sight
-        "team": int,
-        "isHit": boolean            // If player was just hit
-        "weapon": {
-            "firingSpeed": int,     // 1-99, counterpart: damage
-            "damage": int,          // 1-99, counterpart: firingSpeed
-            "carry": int,           // 1-99, counterpart: noise
-            "noise": int,           // 1-99, counterpart: carry
-        }
-    },
-    "players": [                    // Players that are in this AI's view area.
-        "player": {
+    "gamestate": {
+        "timeLeft": int,                // How many seconds left before round ends
+        "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings.
+        "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
+        "darkness": float,              // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
+        "myPlayer": {
             "id": string,
             "name": string,
-            "x": float,             // Tile on x-axis
-            "y": float,             // Tile on y-axis
-            "velocity": vector,     // {x:float,y:float}
-            "lookAt": vector,       // {x:float,y:float}
-            "shootAt": vector,      // {x:float,y:float}
+            "x": float,                 // Tile on x-axis
+            "y": float,                 // Tile on y-axis
+            "velocity": vector,         // {x:float,y:float}
+            "lookAt": vector,           // {x:float,y:float}
+            "shootAt": vector,          // {x:float,y:float} only if player has just shoot.
+            "currentHp": int,           // 1-99
+            "maxHp": int,               // 1-99, counterpart: speed
+            "speed": int,               // 1-99, counterpart: hp
+            "sight": int,               // 1-99, counterpart: hearing
+            "hearing": int              // 1-99, counterpart: sight
             "team": int,
-            "isDead": boolean       // For AIs to figure out how many enemies left.
-        }
-    ],
-    "items": [                      // Items that are in this AI's view area.
-        "item": {
-            "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
-            "x": int,               // Tile on x-axis.
-            "y": int,               // Tile on y-axis.
-            "width": float,         // Relative to tile size.
-            "height": float         // e.g size 2 == 2*TILE_SIZE pixels.
-        }
-    ],
-    "bullets": [                    // Bullets that are in this AI's view area.
-        "bullet": {
-            "x": float,
-            "y": float,
-            "velocity": vector,
-        }
-    ],
-    "sounds": [                     // Sounds that are in this AI's hearing area.
-        "sound": {
-            "type": int,            // 0=WALK, 1=SHOOT
-            "x": float,             // Tile on x-axis.
-            "y": float,             // Tile on y-axis.
-            "accuracy":float        // 1-99
-        }
-    ]
+            "isHit": boolean            // If player was just hit
+            "weapon": {
+                "firingSpeed": int,     // 1-99, counterpart: damage
+                "damage": int,          // 1-99, counterpart: firingSpeed
+                "carry": int,           // 1-99, counterpart: noise
+                "noise": int,           // 1-99, counterpart: carry
+            }
+        },
+        "players": [                    // Players that are in this AI's view area.
+            "player": {
+                "id": string,
+                "name": string,
+                "x": float,             // Tile on x-axis
+                "y": float,             // Tile on y-axis
+                "velocity": vector,     // {x:float,y:float}
+                "lookAt": vector,       // {x:float,y:float}
+                "shootAt": vector,      // {x:float,y:float}
+                "team": int,
+                "isDead": boolean       // For AIs to figure out how many enemies left.
+            }
+        ],
+        "items": [                      // Items that are in this AI's view area.
+            "item": {
+                "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
+                "x": int,               // Tile on x-axis.
+                "y": int,               // Tile on y-axis.
+                "width": float,         // Relative to tile size.
+                "height": float         // e.g size 2 == 2*TILE_SIZE pixels.
+            }
+        ],
+        "bullets": [                    // Bullets that are in this AI's view area.
+            "bullet": {
+                "x": float,
+                "y": float,
+                "velocity": vector,
+            }
+        ],
+        "sounds": [                     // Sounds that are in this AI's hearing area.
+            "sound": {
+                "type": int,            // 0=WALK, 1=SHOOT
+                "x": float,             // Tile on x-axis.
+                "y": float,             // Tile on y-axis.
+                "accuracy":float        // 1-99
+            }
+        ]
+    }
 }
 ```
 
@@ -274,7 +280,7 @@ This message will not hold the socket open. So after this, connect a new socket 
 
 ```javascript
 {
-    "createGame": {
+    "creategame": {
         "numberOfTeams": int,           // Only if player wants to create a game.
         "playersPerTeam": int,          // Only if player wants to create a game.
         "indoor": boolean,              // Whether map is indoors or outdoors
@@ -304,7 +310,7 @@ After [join](#join-message) message is accepted by the server and [game data](#g
 
 ```javascript
 {
-    "createPlayer": {
+    "createplayer": {
         "name": string,
         "hp": int,                  // 1-99, counterpart: speed
         "speed": int,               // 1-99, counterpart: hp
