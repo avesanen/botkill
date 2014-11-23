@@ -8,7 +8,7 @@ type AiMessage struct {
 }
 
 type CreateGameMessage struct {
-	NumberOfTeams      string  `json:"numberOfTeams"`
+	NumberOfTeams      int  `json:"numberOfTeams"`
 	PlayerPerTeam      int     `json:"playerPerTeam"`
 	Indoor             bool    `json:"indoor"`
 	Raining            bool    `json:"raining"`
