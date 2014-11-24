@@ -12,13 +12,11 @@ import java.io.IOException;
  */
 public class MessageListener extends Thread {
 
-    BufferedReader in;
-    DataOutputStream out;
+    TCPClient client;
     MessageHandler handler;
 
-    public MessageListener(BufferedReader  in, DataOutputStream out) {
-        this.in = in;
-        this.out = out;
+    public MessageListener(TCPClient client) {
+        this.client = client;
         handler = new MessageHandler();
     }
 
@@ -27,22 +25,19 @@ public class MessageListener extends Thread {
 
         while (!isInterrupted()) {
 
-            String msg = null;
-            try {
-                msg = in.readLine();
-            } catch (IOException e) {
-                System.out.println("Can't read message from server. Exception: " + e.getMessage());
-            }
+            String msg = client.readLine();
 
             if (msg != null) {
                 String response = handler.handle(msg);
                 if (response != null) {
-                    try {
-                        out.writeBytes(response);
-                    } catch (IOException e) {
-                        System.out.println("Can't write message to server. Exception: " + e.getMessage());
-                    }
+                    client.send(response);
                 }
+            }
+
+            try {
+                Thread.sleep(1000/60); // Work at maximum speed of 60fps
+            } catch (InterruptedException e) {
+                interrupt();
             }
         }
     }

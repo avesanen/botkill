@@ -1,6 +1,8 @@
 package botkill;
 
 import java.io.IOException;
+
+import com.google.gson.Gson;
 import org.json.JSONObject;
 
 public class AI {
@@ -10,15 +12,12 @@ public class AI {
         TCPClient client = new TCPClient();
         client.connect();
 
-        // Create new game if no game id passed in arguments
+        // Create a new game if no game id passed in arguments
         if (args.length == 0) {
+            // Write create game message to the server
+            client.send(new CreateGame().getMessage());
 
-            JSONObject createGame = new JSONObject();
-            createGame.put("createGame", new JSONObject(new CreateGame()));
-
-            client.send(createGame.toString());
-
-            System.out.println("Game ID: " + client.getReader().readLine());
+            System.out.println("Game ID: " + client.readLine());
         }
         // Otherwise join game
         else {
@@ -30,7 +29,7 @@ public class AI {
             client.send(joinGame.toString());
 
             // Listen to server messages
-            MessageListener listener = new MessageListener(client.getReader(), client.getWriter());
+            MessageListener listener = new MessageListener(client);
             listener.start();
         }
     }

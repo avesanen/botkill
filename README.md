@@ -88,59 +88,49 @@ This will be received every tick when the game is on.
         "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
         "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
         "players": [
-            "player": {
-                "id": string,
-                "name": string,
-                "x": float,             // Tile on x-axis
-                "y": float,             // Tile on y-axis
-                "velocity": vector,     // {x:float,y:float}
-                "lookAt": vector,       // {x:float,y:float}
-                "shootAt": vector,      // {x:float,y:float} only if player just shoot
-                "currentHp": int,       // 1-99
-                "maxHp": int,           // 1-99, counterpart: speed
-                "speed": int,           // 1-99, counterpart: hp
-                "sight": int,           // 1-99, counterpart: hearing
-                "hearing": int          // 1-99, counterpart: sight
-                "team": int,
-                "isHit": boolean        // If player was just hit
-                "weapon": {
-                    "firingSpeed": int, // 1-99, counterpart: damage
-                    "damage": int,      // 1-99, counterpart: firingSpeed
-                    "carry": int,       // 1-99, counterpart: noise
-                    "noise": int,       // 1-99, counterpart: carry
-                }
+            "id": string,
+            "name": string,
+            "x": float,             // Tile on x-axis
+            "y": float,             // Tile on y-axis
+            "velocity": vector,     // {x:float,y:float}
+            "lookAt": vector,       // {x:float,y:float}
+            "shootAt": vector,      // {x:float,y:float} only if player just shoot
+            "currentHp": int,       // 1-99
+            "hp": int,              // 1-99, counterpart: speed
+            "speed": int,           // 1-99, counterpart: hp
+            "sight": int,           // 1-99, counterpart: hearing
+            "hearing": int          // 1-99, counterpart: sight
+            "team": int,
+            "isHit": boolean        // If player was just hit
+            "weapon": {
+                "firingSpeed": int, // 1-99, counterpart: damage
+                "damage": int,      // 1-99, counterpart: firingSpeed
+                "carry": int,       // 1-99, counterpart: noise
+                "noise": int        // 1-99, counterpart: carry
             }
         ],
         "tiles": [
-             "tile": {
-                 "type": int,        // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
-                 "x": int,           // Index on x axis
-                 "y": int,           // Index on y axis
-             }
+             "type": int,           // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
+             "x": int,              // Index on x axis
+             "y": int               // Index on y axis
          ],
         "items": [
-            "item": {
-                "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
-                "x": int,               // Tile on x-axis
-                "y": int,               // Tile on y-axis
-                "width": float,         // Relative to tile size
-                "height": float         // e.g size 2 == 2*TILE_SIZE pixels
-            }
+            "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
+            "x": int,               // Tile on x-axis
+            "y": int,               // Tile on y-axis
+            "width": float,         // Relative to tile size
+            "height": float         // e.g size 2 == 2*TILE_SIZE pixels
         ],
         "bullets": [
-            "bullet": {
-                "x": float,
-                "y": float,
-                "velocity": vector,
-            }
+            "x": float,
+            "y": float,
+            "velocity": vector
         ],
         "sounds": [
-            "sound": {
-                "type": int,            // 0=WALK, 1=SHOOT
-                "x": float,             // Tile on x-axis
-                "y": float,             // Tile on y-axis
-                "noise":float           // 1-99
-            }
+            "type": int,            // 0=WALK, 1=SHOOT
+            "x": float,             // Tile on x-axis
+            "y": float,             // Tile on y-axis
+            "noise":float           // 1-99
         ]
     }
 }
@@ -153,10 +143,8 @@ This is sent to the visualization once when the whole game ends.
 ```javascript
 {
     "scoreboard": [
-        "score": {
-            "player": string,       // Player name
-            "points": int           // kills, deaths, survival count
-        }
+        "player": string,           // Player name
+        "points": int               // kills, deaths, survival count
     ]
 }
 ```
@@ -204,12 +192,12 @@ Sent from server on every tick when the game is on
             "lookAt": vector,           // {x:float,y:float}
             "shootAt": vector,          // {x:float,y:float} only if player has just shoot.
             "currentHp": int,           // 1-99
-            "maxHp": int,               // 1-99, counterpart: speed
+            "hp": int,                  // 1-99, counterpart: speed
             "speed": int,               // 1-99, counterpart: hp
             "sight": int,               // 1-99, counterpart: hearing
-            "hearing": int              // 1-99, counterpart: sight
+            "hearing": int,             // 1-99, counterpart: sight
             "team": int,
-            "isHit": boolean            // If player was just hit
+            "isHit": boolean,           // If player was just hit
             "weapon": {
                 "firingSpeed": int,     // 1-99, counterpart: damage
                 "damage": int,          // 1-99, counterpart: firingSpeed
@@ -218,41 +206,33 @@ Sent from server on every tick when the game is on
             }
         },
         "players": [                    // Players that are in this AI's view area.
-            "player": {
-                "id": string,
-                "name": string,
-                "x": float,             // Tile on x-axis
-                "y": float,             // Tile on y-axis
-                "velocity": vector,     // {x:float,y:float}
-                "lookAt": vector,       // {x:float,y:float}
-                "shootAt": vector,      // {x:float,y:float}
-                "team": int,
-                "isDead": boolean       // For AIs to figure out how many enemies left.
-            }
+            "id": string,
+            "name": string,
+            "x": float,                 // Tile on x-axis
+            "y": float,                 // Tile on y-axis
+            "velocity": vector,         // {x:float,y:float}
+            "lookAt": vector,           // {x:float,y:float}
+            "shootAt": vector,          // {x:float,y:float}
+            "team": int,
+            "isDead": boolean           // For AIs to figure out how many enemies left.
         ],
         "items": [                      // Items that are in this AI's view area.
-            "item": {
-                "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
-                "x": int,               // Tile on x-axis.
-                "y": int,               // Tile on y-axis.
-                "width": float,         // Relative to tile size.
-                "height": float         // e.g size 2 == 2*TILE_SIZE pixels.
-            }
+            "type": int,                // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
+            "x": int,                   // Tile on x-axis.
+            "y": int,                   // Tile on y-axis.
+            "width": float,             // Relative to tile size.
+            "height": float             // e.g size 2 == 2*TILE_SIZE pixels.
         ],
         "bullets": [                    // Bullets that are in this AI's view area.
-            "bullet": {
-                "x": float,
-                "y": float,
-                "velocity": vector,
-            }
+            "x": float,
+            "y": float,
+            "velocity": vector
         ],
         "sounds": [                     // Sounds that are in this AI's hearing area.
-            "sound": {
-                "type": int,            // 0=WALK, 1=SHOOT
-                "x": float,             // Tile on x-axis.
-                "y": float,             // Tile on y-axis.
-                "accuracy":float        // 1-99
-            }
+            "type": int,                // 0=WALK, 1=SHOOT
+            "x": float,                 // Tile on x-axis.
+            "y": float,                 // Tile on y-axis.
+            "accuracy":float            // 1-99
         ]
     }
 }

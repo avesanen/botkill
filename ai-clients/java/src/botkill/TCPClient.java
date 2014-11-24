@@ -25,14 +25,6 @@ public class TCPClient {
 
     }
 
-    public BufferedReader getReader() {
-        return in;
-    }
-
-    public DataOutputStream getWriter() {
-        return out;
-    }
-
     public void connect() throws IOException {
         clientSocket = new Socket(HOST, PORT);
         out = new DataOutputStream(clientSocket.getOutputStream());
@@ -45,6 +37,15 @@ public class TCPClient {
             out.flush();
         } catch (IOException e) {
             System.out.println("Unable to send msg to server. Exception: " + e.getMessage());
+        }
+    }
+
+    public String readLine() {
+        try {
+            return in.readLine();
+        } catch (IOException e) {
+            System.out.println("Unable to read msg from server. Exception: " + e.getMessage());
+            return null;
         }
     }
 }
