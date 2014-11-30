@@ -82,6 +82,9 @@ func (ac *AiConn) write(b []byte) error {
 	if _, err := ac.sc.Write(b); err != nil {
 		return err
 	}
+	if _, err := ac.sc.Write([]byte("\n")); err != nil {
+		return err
+	}
 	ac.writeLock.Unlock()
 	return nil
 }
@@ -100,7 +103,7 @@ func (ac *AiConn) subGameState(msg *nats.Msg) {
 func (ac *AiConn) pubCreateGame(msg *messages.CreateGameMessage) {
 	log.Println("AiConn '" + ac.Id + "' got createGame message from AI.")
 	var response string
-	err := ac.nc.Request("createGame", msg, &response, 100*time.Millisecond)
+	err := ac.nc.Request("createGame", msg, &response, 1000*time.Millisecond)
 	if err != nil {
 		log.Println("Error while sending createGame message to gameserver:", err)
 	} else {
@@ -112,13 +115,14 @@ func (ac *AiConn) pubCreateGame(msg *messages.CreateGameMessage) {
 	}
 }
 
+// {"join":{"gameId":"ef7cc7f7-7a06-4025-805b-b2df34dc0aa2"}}
 func (ac *AiConn) pubJoin(msg *messages.JoinMessage) {
 	log.Println("AiConn '" + ac.Id + "' got joinGame message from AI.")
 	var response string
-	err := ac.nc.Request(msg.GameId+".joinGame", msg, &response, 100*time.Millisecond)
+	err := ac.nc.Request(msg.GameId+".joinGame", msg, &response, 1000*time.Millisecond)
 	if err != nil {
+		log.Println("ERROR AiConn '" + ac.Id + "' can't send joinGame message: " + err.Error())
 	} else {
-		log.Println(response)
 		_, err := ac.sc.Write([]byte(response))
 		if err != nil {
 			log.Println("Can't write to socket!")
@@ -129,7 +133,7 @@ func (ac *AiConn) pubJoin(msg *messages.JoinMessage) {
 func (ac *AiConn) pubLeave(msg *messages.LeaveMessage) {
 	log.Println("AiConn '" + ac.Id + "' got leaveGame message from AI.")
 	var response string
-	err := ac.nc.Request(msg.PlayerId+".leaveGame", msg, &response, 100*time.Millisecond)
+	err := ac.nc.Request(msg.PlayerId+".leaveGame", msg, &response, 1000*time.Millisecond)
 	if err != nil {
 	} else {
 		log.Println(response)
@@ -143,7 +147,7 @@ func (ac *AiConn) pubLeave(msg *messages.LeaveMessage) {
 func (ac *AiConn) pubAction(msg *messages.ActionMessage) {
 	log.Println("AiConn '" + ac.Id + "' got action message from AI.")
 	var response string
-	err := ac.nc.Request(msg.PlayerId+".action", msg, &response, 100*time.Millisecond)
+	err := ac.nc.Request(msg.PlayerId+".action", msg, &response, 1000*time.Millisecond)
 	if err != nil {
 	} else {
 		log.Println(response)

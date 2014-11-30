@@ -29,7 +29,7 @@ func NewWebServer(host string, port string) *WebServer {
 	s.Router.PathPrefix("/").Handler(http.FileServer(http.Dir("./www/")))
 
 	http.Handle("/", s.Router)
-	go http.ListenAndServe(":8080", nil)
+	go http.ListenAndServe(host+":"+port, nil)
 
 	return s
 }

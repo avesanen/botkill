@@ -19,7 +19,7 @@ func debugGnatsd() {
 
 func main() {
 	// Start game server
-	s := webserver.NewWebServer("localhost", "8080")
+	s := webserver.NewWebServer("localhost", "8888")
 	log.Println("Got server:", s)
 
 	// Test aiserver nats connection
