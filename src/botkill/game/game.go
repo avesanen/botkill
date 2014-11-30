@@ -26,5 +26,8 @@ func NewGame(nc *nats.EncodedConn, gsid string) *Game {
 	g.Id = util.Uuid()
 	g.nc = nc
 	g.gameServerId = gsid
+	g.nc.Subscribe(g.Id+".joinGame", g.subJoinGame)
 	return g
 }
+
+func (g *Game) subJoinGame(msg *nats.Msg) {}
