@@ -56,3 +56,6 @@ func (g *Game) toJson() []byte {
 	}
 	return b
 }
+
+// TODO:
+func (g *Game) loadTiles(tileFile string) {}

@@ -5,6 +5,11 @@ type AiMessage struct {
 	CreateGame *CreateGameMessage `json:"createGame,omitempty"`
 	Action     *ActionMessage     `json:"action,omitempty"`
 	Leave      *LeaveMessage      `json:"leave,omitempty"`
+	GameState  *GameStateMessage  `json:"gameState,omitempty"`
+}
+
+type GameStateMessage struct {
+	GameId string `json:"gameId"`
 }
 
 type CreateGameMessage struct {
