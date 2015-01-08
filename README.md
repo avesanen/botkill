@@ -18,7 +18,7 @@ AI programming game in spirit of old top-down kill'em'all games.
     * [Game data](#game-data)
     * [Game state message for AI](#game-state-message-for-ai)
     * [Experience message](#experience-message)
- * [Join request](#join-request-message)
+* [Join request](#join-request-message)
 
 **[AI messages](#ai-messages)**
 * [Create game message](#create-game-message)
