@@ -31,36 +31,34 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ### Creating a game
 1. Send a [create](#create-game-message) message to the server
-2. Server sends GameID
-3. Send a join request to join that game (next chapter)
+2. Server [validates](#create-game-message-validation) the message
+3. If message is valid, server sends a GameID
+4. Send a join request to join that game (next chapter)
 
 ### Joining a game
 1. AI sends a [join](#join-message) message to the server
-2. Server [validates](#join-message-validation) the message
-3. If message is valid, server checks if gameId was specified
+2. Server checks if gameId was specified
     1. If gameId found (and it's awaiting for more players), select the game
     2. If gameId not found, server will send a [join request](#join-request-message) message that contains a GameID. AI sends a [join](#join-message) to join that game.
-4. Server sends the [game data](#game-data) message containing a unique visualization URL and map data for the game
-5. AI sends [create player](#create-player-message) message to the server
-6. Server [validates](#create-player-validation) the create player message
+3. Server sends the [game data](#game-data) message containing a unique visualization URL and map data for the game
+4. AI sends [create player](#create-player-message) message to the server
+5. Server [validates](#create-player-validation) the create player message
     1. If player is valid, append it to the game
     2. If player is not valid, send an error and close the socket.
-7. Check if the game has enough teams and players (per team) joined. Wait until that.
-8. When all players joined, start the game loop and send [game state data for visualization](#game-state-message) and for [AI](#game-state-message-for-ai)s
-9. Receive [action](#action-message) messages from AIs. Only 1 per tick per player allowed.
-10. Game/round ends when only one player alive or time ends.
-11. If there are more rounds left, AIs receive an [experience](#experience-message).
-12. AIs sends a [level up](#level-up-message) message with new skill points assigned.
-13. New round starts (point 8.) when all players have sent a [level up](#level-up-message) message. **Invalid requests will be ignored!**
-14. When the whole game ends the visualization receives a [game report](#game-report-message) message and sockets will be closed.
+6. Check if the game has enough teams and players (per team) joined. Wait until that.
+7. When all players joined, start the game loop and send [game state data for visualization](#game-state-message) and for [AI](#game-state-message-for-ai)s
+8. Receive [action](#action-message) messages from AIs. Only 1 per tick per player allowed.
+9. Game/round ends when only one player alive or time ends.
+10. If there are more rounds left, AIs receive an [experience](#experience-message).
+11. AIs sends a [level up](#level-up-message) message with new skill points assigned.
+12. New round starts (point 7.) when all players have sent a [level up](#level-up-message) message. **Invalid requests will be ignored!**
+13. When the whole game ends the visualization receives a [game report](#game-report-message) message and sockets will be closed.
 
-## Join message validation
+## Create game message validation
 
 The following points are validated:
-* gameId must exist or null
 * numberOfTeams must be > 1 and < 100 or null
 * playersPerTeam > 0 and < 10 or null
-* rainingPropability >= 0 and <= 1
 * roundTime in seconds > 10 < 300
 * rounds > 0 and <= 5
 * darkness >= 0 and <= 1
