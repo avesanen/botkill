@@ -18,6 +18,7 @@ AI programming game in spirit of old top-down kill'em'all games.
     * [Game data](#game-data)
     * [Game state message for AI](#game-state-message-for-ai)
     * [Experience message](#experience-message)
+ * [Join request](#join-request-message)
 
 **[AI messages](#ai-messages)**
 * [Create game message](#create-game-message)
@@ -28,11 +29,17 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ## Communication between AI and Server
 
+### Creating a game
+1. Send a [create](#create-game-message) to the server
+2. Server sends GameID
+3. Send a join request to join that game (next chapter)
+
+### Joining a game
 1. AI sends a [join](#join-message) message to the server
-2. Server [validates](#join-message-validation) the join message
+2. Server [validates](#join-message-validation) the message
 3. If message is valid, server checks if gameId was specified
     1. If gameId found (and it's awaiting for more players), select the game
-    2. If gameId not found, create a new game and generate the map based on the join message data
+    2. If gameId not found, server will send a [join request](#join-request-message) message that contains a GameID. AI sends a [join](#join-message) to join that game.
 4. Server sends the [game data](#game-data) message containing a unique visualization URL and map data for the game
 5. AI sends [create player](#create-player-message) message to the server
 6. Server [validates](#create-player-validation) the create player message
@@ -246,6 +253,18 @@ Received by AIs when a round ends and new round will start. These points may be 
 {
     "experience": {
         "points": int       // May be distributed freely in any player or weapon skill
+    }
+}
+```
+
+### Join request message
+
+Sent by server to AI that is awaiting to join a game.
+
+```javascript
+{ 
+    "joinrequest": {
+        "gameId": string,               // Where the player is asked to join to.
     }
 }
 ```
