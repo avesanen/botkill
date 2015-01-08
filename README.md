@@ -30,7 +30,7 @@ AI programming game in spirit of old top-down kill'em'all games.
 ## Communication between AI and Server
 
 ### Creating a game
-1. Send a [create](#create-game-message) to the server
+1. Send a [create](#create-game-message) message to the server
 2. Server sends GameID
 3. Send a join request to join that game (next chapter)
 
@@ -120,6 +120,7 @@ This will be received every tick when the game is on.
              "type": int,           // To specify what sprite to draw. 0=GRASS, 1=DIRT, 2=ASPHALT
              "x": int,              // Index on x axis
              "y": int               // Index on y axis
+             "hit": vector          // x,y coordinates where tile was hit
          ],
         "items": [
             "type": int,            // To specify what sprite to draw. 0=BOX, 1=WALL, 2=TREE, 3=HOUSE etc.
