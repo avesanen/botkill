@@ -4,6 +4,8 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ## Table of Contents
 
+**[Coordinate system](#coordinate-system)
+
 **[Communication between AI and Server](#communication-between-ai-and-server)**
 * [Creating a game](#creating-a-game)
 * [Joining a game](#joinin-a-game)
@@ -27,17 +29,21 @@ AI programming game in spirit of old top-down kill'em'all games.
 * [Action message](#action-message)
 * [Level up message](#level-up-message)
 
+## Coordinate system
+
+The origin (x=0, y=0) is at the top-left corner. Recieved coordinates are always global. Which means that if your bots position is at x=1, y=1, and it sees an enemy at x=1, y=10, then your bot is almost in the top-left corder and the enemy bot is 9 units straight down from your bot.
+
 ## Communication between AI and Server
 
 ### Creating a game
 1. Register your team in game console at http://ai.hell.fi/team/create
 2. Write down your team's (secret) botId
 3. Connect the AI to backend's socket: host XXXXXXXXX, port XXXX
-4. Send a [register](#register-message) message to the backend with your team's id
+4. Send a [register](#register-message) message to the backend with your team's botId
 5. Navigate to http://ai.hell.fi/game/create to create a game. Your AI should be visible there now.
 
 ### Joining a game
-1. Start created game by clicking "Start game" button in the game console.
+1. Start the created game by clicking "Start game" -button in the game console.
 2. Backend sends a [join request](#join-request-message) message to all teams that were selected on game create
    2.1. Join request message contains useful data of the map data for the game. It's adviced to unilize this when creating your bot.
 3. AI sends [create player](#create-player-message) message to the server
