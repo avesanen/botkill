@@ -5,23 +5,23 @@ AI programming game in spirit of old top-down kill'em'all games.
 ## Table of Contents
 
 **[Communication between AI and Server](#communication-between-ai-and-server)**
-
-**[Join message validation](#join-message-validation)**
+* [Creating a game](#creating-a-game)
+* [Joining a game](#joinin-a-game)
+* [Game loop](#game-loop)
 
 **[Create player validation](#create-player-validation)**
 
 **[Server messages](#server-messages)**
 * [JSON for visualization](#json-for-visualization)
-    * [Game state message for visualization](#game-state-message)
-    * [Game report message](#game-report-message)
+   * [Game state message for visualization](#game-state-message)
+   * [Game report message](#game-report-message)
 * [JSON for AI](#json-for-ai)
-    * [Game data](#game-data)
-    * [Game state message for AI](#game-state-message-for-ai)
-    * [Experience message](#experience-message)
-* [Join request](#join-request-message)
+   * [Game state message for AI](#game-state-message-for-ai)
+   * [Experience message](#experience-message)
+   * [Join request](#join-request-message)
 
 **[AI messages](#ai-messages)**
-* [Create game message](#create-game-message)
+* [Register message](#register-message)
 * [Join message](#join-message)
 * [Create player message](#create-player-message)
 * [Action message](#action-message)
@@ -30,50 +30,41 @@ AI programming game in spirit of old top-down kill'em'all games.
 ## Communication between AI and Server
 
 ### Creating a game
-1. Send a [create](#create-game-message) message to the server
-2. Server [validates](#create-game-message-validation) the message
-3. If message is valid, server sends a GameID
-4. Send a join request to join that game (next chapter)
+1. Register your team in game console at http://ai.hell.fi/team/create
+2. Take down your team's id
+3. Connect the AI to backend's socket: host XXXXXXXXX, port XXXX
+4. Send a [register](#register-message) message to the backend with your team's id
+5. Navigate to http://ai.hell.fi/game/create to create a game. Your AI should be visible there now.
 
 ### Joining a game
-1. AI sends a [join](#join-message) message to the server
-2. Server checks if gameId was specified
-    1. If gameId found (and it's awaiting for more players), select the game
-    2. If gameId not found, server will send a [join request](#join-request-message) message that contains a GameID. AI sends a [join](#join-message) to join that game.
-3. Server sends the [game data](#game-data) message containing a unique visualization URL and map data for the game
-4. AI sends [create player](#create-player-message) message to the server
-5. Server [validates](#create-player-validation) the create player message
+1. Start created game by clicking "Start game" button in the game console.
+2. Backend sends a [join request](#join-request-message) message to all teams that were selected on game create
+   2.1. Join request message contains useful data of the map data for the game. It's adviced to unilize this when creating your bot.
+3. AI sends [create player](#create-player-message) message to the server
+4. Server [validates](#create-player-validation) the create player message
     1. If player is valid, append it to the game
-    2. If player is not valid, send an error and close the socket.
-6. Check if the game has enough teams and players (per team) joined. Wait until that.
-7. When all players joined, start the game loop and send [game state data for visualization](#game-state-message) and for [AI](#game-state-message-for-ai)s
-8. Receive [action](#action-message) messages from AIs. Only 1 per tick per player allowed.
-9. Game/round ends when only one player alive or time ends.
-10. If there are more rounds left, AIs receive an [experience](#experience-message).
-11. AIs sends a [level up](#level-up-message) message with new skill points assigned.
-12. New round starts (point 7.) when all players have sent a [level up](#level-up-message) message. **Invalid requests will be ignored!**
-13. When the whole game ends the visualization receives a [game report](#game-report-message) message and sockets will be closed.
-
-## Create game message validation
-
-The following points are validated:
-* numberOfTeams must be > 1 and < 100 or null
-* playersPerTeam > 0 and < 10 or null
-* roundTime in seconds > 10 < 300
-* rounds > 0 and <= 5
-* darkness >= 0 and <= 1
+    2. If player is not valid, send an error and close the socket. Game won't start.
+5. Check if the game has enough teams and players (per team) joined. Bots have few seconds to answer before backend gives up. 
+ 
+### Game loop
+1. When all players have joined, backend starts the game loop and sends [game state data for visualizations](#game-state-message) and for [AI](#game-state-message-for-ai)s
+2. AIs can send one [action](#action-message) messages per tick per player to backend.
+3. Game/round ends when only one player is alive or when time ends.
+4. If there are more rounds left in the game, AIs receive an [experience](#experience-message).
+5. AIs send a [level up](#level-up-message) message with new skill points assigned.
+6. New round starts (point 1.) when all players have sent a [level up](#level-up-message) message. **Invalid requests will be ignored!**
+7. When the whole game ends, the visualization receives a [game report](#game-report-message) message and sockets will be closed.
 
 ## Create player validation
 * hp + speed == 100
-    * hearing + sight == 100
-    * team: null OR (> 0 and <= game.numberOfTeams and game.teams[team].size < game.playersPerTeam)
+* hearing + sight == 100
 * weapon
     * firingSpeed + damage == 100
     * carry + noise == 100
 
 ## Server messages
 
-Messages sent by the server
+Messages sent from server (backend) to AI
 
 ### JSON for visualization
 
@@ -89,7 +80,7 @@ This will be received every tick when the game is on.
         "rounds": int,                  // How many rounds there will be
         "currentRound": int,            // What is the current round
         "timeLeft": int,                // How many seconds bots have time before round ends
-        "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
+        "environemnt": int,             // 0 = CAVERN, 1 = FOREST
         "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
         "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
         "players": [
@@ -159,25 +150,6 @@ This is sent to the visualization once when the whole game ends.
 
 Messages sent to AIs by server
 
-#### Game data
-
-This is received by AI when a join request is accepted
-
-```javascript
-{
-    "gamedata": {
-        "id": string,
-        "visualizationUrl:" string,     // e.g. http://botkill.com/{gameId}
-        "rounds": int,                  // How many rounds there will be
-        "currentRound": int,            // What is the current round
-        "roundTime": int,               // How many seconds bots have time before round ends
-        "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings
-        "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
-        "darkness": float               // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-    }
-}
-```
-
 #### Game state message for AI
 
 Sent from server on every tick when the game is on
@@ -186,7 +158,7 @@ Sent from server on every tick when the game is on
 {
     "gamestate": {
         "timeLeft": int,                // How many seconds left before round ends
-        "indoor": boolean,              // Indoor contains more walls and rooms, outdoor has more openings.
+        "environemnt": int,             // 0 = CAVERN, 1 = FOREST
         "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
         "darkness": float,              // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
         "myPlayer": {
@@ -258,12 +230,19 @@ Received by AIs when a round ends and new round will start. These points may be 
 
 ### Join request message
 
-Sent by server to AI that is awaiting to join a game.
+Sent by server to AIs that are awaiting to join a game.
 
 ```javascript
 { 
     "joinrequest": {
         "gameId": string,               // Where the player is asked to join to.
+        "gameMode": string,             // DUEL, DEATHMATCH, TEAM
+        "playerCount": int,             // How many bots are participating in this game
+        "rounds": int,                  // How many rounds there will be
+        "roundTime": int,               // How many seconds bots have time before round ends
+        "environment": int,             // 0=CAVERN, 1=FOREST. Caverns are more labyrithine, outdoors has more openings
+        "rain": float,                  // 0 - 1, 1 is total flood. 0.2 rain is 20% off from hearing.
+        "darkness": float               // 0 - 1, 1 is total darkness. 0.2 darkness is 20% off from sight.
     }
 }
 ```
@@ -272,20 +251,14 @@ Sent by server to AI that is awaiting to join a game.
 
 Messages that AIs should send to the server
 
-### Create game message
+### Register message
 
-This message will not hold the socket open. So after this, connect a new socket and join the game you created.
+Retrieve your team's secret password by registering a team at http://ai.hell.fi/team/create.
 
 ```javascript
 {
-    "creategame": {
-        "numberOfTeams": int,           // Only if player wants to create a game.
-        "playersPerTeam": int,          // Only if player wants to create a game.
-        "indoor": boolean,              // Whether map is indoors or outdoors
-        "rain": float,                  // 0 - 1, 1 is total flood. Reduces hearing. 0.2 rain is 20% off from hearing.
-        "darkness": float,              // 0 - 1, 1 is total darkness. Reduces sight. 0.2 darkness is 20% off from sight.
-        "roundTime": int,               // Round time in seconds.
-        "rounds": int                   // How many rounds before game ends
+    "register": {
+        "botId": string                // Don't share this id to anyone else
     }
 }
 ```
@@ -314,7 +287,6 @@ After [join](#join-message) message is accepted by the server and [game data](#g
         "speed": int,               // 1-99, counterpart: hp
         "sight": int,               // 1-99, counterpart: hearing
         "hearing": int              // 1-99, counterpart: sight
-        "team": int,                // Omit if server can decide.
         "weapon": {
             "firingSpeed": int,     // 1-99, counterpart: damage
             "damage": int,          // 1-99, counterpart: firingSpeed
