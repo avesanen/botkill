@@ -31,7 +31,7 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ### Creating a game
 1. Register your team in game console at http://ai.hell.fi/team/create
-2. Take down your team's id
+2. Write down your team's (secret) botId
 3. Connect the AI to backend's socket: host XXXXXXXXX, port XXXX
 4. Send a [register](#register-message) message to the backend with your team's id
 5. Navigate to http://ai.hell.fi/game/create to create a game. Your AI should be visible there now.
