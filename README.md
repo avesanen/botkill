@@ -4,7 +4,7 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ## Table of Contents
 
-**[Coordinate system](#coordinate-system)
+**[Coordinate system](#coordinate-system)**
 
 **[Communication between AI and Server](#communication-between-ai-and-server)**
 * [Creating a game](#creating-a-game)
