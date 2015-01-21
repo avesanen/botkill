@@ -31,7 +31,9 @@ AI programming game in spirit of old top-down kill'em'all games.
 
 ## Coordinate system
 
-The origin (x=0, y=0) is at the top-left corner. Recieved coordinates are always global. Which means that if your bots position is at x=1, y=1, and it sees an enemy at x=1, y=10, then your bot is almost in the top-left corder and the enemy bot is 9 units straight down from your bot.
+The origin (x=0, y=0) is at the top-left corner. 
+
+Recieved coordinates are always global. Which means that if your bot's position is at x=1, y=1, and it sees an enemy at x=1, y=10, then your bot is almost in the top-left corder and the enemy bot is 9 units straight down from your bot.
 
 ## Communication between AI and Server
 
