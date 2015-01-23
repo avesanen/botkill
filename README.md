@@ -21,7 +21,7 @@ AI programming game in spirit of old top-down kill'em'all games.
    * [Game state message for AI](#game-state-message-for-ai)
    * [Experience message](#experience-message)
    * [Join request](#join-request-message)
-   * [Round end message)(#round-end-message)
+   * [Round end message](#round-end-message)
    * [Game over message](#game-over-message)
 
 **[AI messages](#ai-messages)**
