@@ -39,6 +39,9 @@ Recieved coordinates are always global. Which means that if your bot's position 
 
 ## Communication between AI and Server
 
+Here's a sequence diagram of who sends what type of messages to where in one tournament:
+![Sequence diagram of the communication](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQXV0aGVudGljYXRpb24gU2VxdWVuY2UKCkFpLT5CYWNrZW5kOiByZWdpc3RlckFJCgANBy0-QWkADgplZAAOCkNvbnNvbGU6IG5ld0FpCgAIBwBCC2NyZWF0ZUdhbWUAHxYAFQUALglBaTogam9pblJlcXVlc3QAgQoObmV3UGxheWVyAIEhDmpvaW4ASRdnYW1lU3RhdABxC0FpAAsMAIEeEnN0YXJ0ABc4AII6DWFjdGlvbgABRgAzFGVuZACCSQ5BaQALCg&s=napkin)
+
 ### Creating a game
 1. Register your team in game console at http://ai.hell.fi/team/create
 2. Write down your team's (secret) botId
