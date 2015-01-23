@@ -21,6 +21,8 @@ AI programming game in spirit of old top-down kill'em'all games.
    * [Game state message for AI](#game-state-message-for-ai)
    * [Experience message](#experience-message)
    * [Join request](#join-request-message)
+   * [Round end message)(#round-end-message)
+   * [Game over message](#game-over-message)
 
 **[AI messages](#ai-messages)**
 * [Register message](#register-message)
@@ -252,6 +254,26 @@ Sent by server to AIs that are awaiting to join a game.
         "rain": float,                  // 0 - 1, 1 is total flood. 0.2 rain is 20% off from hearing.
         "darkness": float               // 0 - 1, 1 is total darkness. 0.2 darkness is 20% off from sight.
     }
+}
+```
+
+### Round end message
+
+Sent by server to AIs when a round ends. AIs may clean up their data when this occurs.
+
+```javascript
+{ 
+    "roundend": {}
+}
+```
+
+### Game over message
+
+Sent by server to AIs when the game ends. Not just a round but the whole game. It's a sign to end game loop thread.
+
+```javascript
+{ 
+    "gameover": {}
 }
 ```
 
