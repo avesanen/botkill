@@ -30,7 +30,14 @@ public class MessageListener extends Thread {
             if (msg != null) {
                 String response = handler.handle(msg);
                 if (response != null) {
-                    client.send(response);
+
+                    // Check if our game ended. Not just one round but the whole game.
+                    if (response == MessageHandler.GAME_OVER) {
+                        // Interrupt this game loop but continue listening new join requests in the AI thread
+                        interrupt();
+                    } else {
+                        client.send(response);
+                    }
                 }
             }
 

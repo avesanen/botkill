@@ -25,10 +25,13 @@ public class TCPClient {
 
     }
 
-    public void connect() throws IOException {
+    public void connect(String secretId) throws IOException {
         clientSocket = new Socket(HOST, PORT);
         out = new DataOutputStream(clientSocket.getOutputStream());
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+        // This connects the bot to the correct ai-game-console team
+        send("{register: {\"botId\":\"" + secretId + "\"}}");
     }
 
     public void send(String msg) {

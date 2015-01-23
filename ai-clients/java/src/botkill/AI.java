@@ -2,35 +2,53 @@ package botkill;
 
 import java.io.IOException;
 
-import com.google.gson.Gson;
-import org.json.JSONObject;
+public class AI extends Thread {
 
-public class AI {
+    private TCPClient client;
+    private MessageHandler handler;
+
+    public AI(TCPClient client) {
+        this.client = client;
+        handler = new MessageHandler();
+    }
+
+    public void run() {
+        System.out.println("Waiting for join requests...");
+
+        while (!isInterrupted()) {
+
+            String msg = client.readLine();
+
+            // Is it a join request?
+            if (msg != null) {
+                // Join request contains game data which should be utilized to set our player properties
+                String createPlayerMsg = handler.handleJoinRequest(msg);
+                if (createPlayerMsg != null) {
+                    // Create the player
+                    client.send(createPlayerMsg);
+
+                    // Start game loop
+                    MessageListener listener = new MessageListener(client);
+                    listener.start();
+                } else {
+                    System.out.println("Create player msg was null...this shouldn't happen if you want to join any games.");
+                }
+            }
+
+            try {
+                Thread.sleep(1000/60); // Work at maximum speed of 60fps
+            } catch (InterruptedException e) {
+                interrupt();
+            }
+        }
+    }
 
     public static void main(String[] args) throws IOException {
-
         TCPClient client = new TCPClient();
-        client.connect();
+        // TODO: Change the ID
+        client.connect("MY_SECRET_ID");
 
-        // Create a new game if no game id passed in arguments
-        if (args.length == 0) {
-            // Write create game message to the server
-            client.send(new CreateGame().getMessage());
-
-            System.out.println("Game ID: " + client.readLine());
-        }
-        // Otherwise join game
-        else {
-            JSONObject gameId = new JSONObject().put("gameId", args[0]);
-            JSONObject joinGame = new JSONObject();
-            joinGame.put("join", gameId);
-
-            // Write join message to the server
-            client.send(joinGame.toString());
-
-            // Listen to server messages
-            MessageListener listener = new MessageListener(client);
-            listener.start();
-        }
+        AI ai = new AI(client);
+        ai.start();
     }
 }
