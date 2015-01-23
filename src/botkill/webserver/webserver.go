@@ -19,17 +19,23 @@ type WebServer struct {
 
 // NewServer will start the http server, that will listen to port 8080,
 // and return the server or error
-func NewWebServer(host string, port string) *WebServer {
+func NewWebServer(host string, port string, nc *nats.EncodedConn) *WebServer {
 	s := &WebServer{}
+	s.nc = nc
 
 	// Init a new Gorilla Mux router
 	s.Router = mux.NewRouter()
+
+	// Websocket path
+	s.Router.Path("/ws").
+		HandlerFunc(s.websocketHandler).
+		Name("Websocket")
 
 	// Set the root "/" url to serve static files from www directory
 	s.Router.PathPrefix("/").Handler(http.FileServer(http.Dir("./www/")))
 
 	http.Handle("/", s.Router)
-	go http.ListenAndServe(":8080", nil)
+	go http.ListenAndServe(host+":"+port, nil)
 
 	return s
 }

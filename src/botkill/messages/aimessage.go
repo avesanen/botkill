@@ -1,14 +1,19 @@
 package messages
 
 type AiMessage struct {
-	Join         *JoinMessage         `json:"join,omitempty"`
-	CreateGame   *CreateGameMessage   `json:"createGame,omitempty"`
-	CreatePlayer *CreatePlayerMessage `json:"createPlayer,omitempty"`
-	Action       *ActionMessage       `json:"action,omitempty"`
+	Join       *JoinMessage       `json:"join,omitempty"`
+	CreateGame *CreateGameMessage `json:"createGame,omitempty"`
+	Action     *ActionMessage     `json:"action,omitempty"`
+	Leave      *LeaveMessage      `json:"leave,omitempty"`
+	GameState  *GameStateMessage  `json:"gameState,omitempty"`
+}
+
+type GameStateMessage struct {
+	GameId string `json:"gameId"`
 }
 
 type CreateGameMessage struct {
-	NumberOfTeams      int  `json:"numberOfTeams"`
+	NumberOfTeams      int     `json:"numberOfTeams"`
 	PlayerPerTeam      int     `json:"playerPerTeam"`
 	Indoor             bool    `json:"indoor"`
 	Raining            bool    `json:"raining"`
@@ -19,10 +24,7 @@ type CreateGameMessage struct {
 }
 
 type JoinMessage struct {
-	GameId string `json:"gameId"`
-}
-
-type CreatePlayerMessage struct {
+	GameId  string `json:"gameId"`
 	Name    string `json:"name"`
 	Hp      int    `json:"hp"`
 	Speed   int    `json:"speed"`
@@ -37,8 +39,13 @@ type CreatePlayerMessage struct {
 	} `json:"weapon"`
 }
 
+type LeaveMessage struct {
+	PlayerId string `json:"playerId"`
+}
+
 type ActionMessage struct {
-	Type      int `json:"type"`
+	PlayerId  string `json:"playerId"`
+	Type      int    `json:"type"`
 	Direction struct {
 		X int `json:"x"`
 		Y int `json:"y"`

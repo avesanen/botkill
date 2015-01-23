@@ -18,10 +18,6 @@ func debugGnatsd() {
 }
 
 func main() {
-	// Start game server
-	s := webserver.NewWebServer("localhost", "8080")
-	log.Println("Got server:", s)
-
 	// Test aiserver nats connection
 	var c *nats.Conn
 	log.Println("Connecting to NATS server.")
@@ -44,6 +40,10 @@ func main() {
 	if err != nil {
 		log.Panicln("Can't create encoded NATS connection:", err.Error())
 	}
+
+	// Start game server
+	s := webserver.NewWebServer("localhost", "8888", nc)
+	log.Println("Got server:", s)
 
 	// gameServer instance
 	gs := gameserver.NewGameServer(nc)
